@@ -1,0 +1,12 @@
+{
+    "files.associations": {
+        "stdint.h": "c",
+        "tomato_string.h": "c",
+        "string.h": "c",
+        "defines.h": "c",
+        "string": "c",
+        "random": "c"
+    },
+    "editor.formatOnSave": true,
+    "0": 0
+}
