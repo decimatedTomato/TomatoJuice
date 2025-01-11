@@ -4,6 +4,7 @@
         {
             "name": "(gdb) Launch",
             "type": "cppdbg",
+            "preLaunchTask": "build",
             "request": "launch",
             "program": "${workspaceFolder}/test/string/test_s8.exe",
             "args": [],
@@ -26,6 +27,5 @@
                 }
             ]
         }
-
     ]
 }

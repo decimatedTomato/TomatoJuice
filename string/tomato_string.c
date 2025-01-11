@@ -6,6 +6,7 @@
 s8 s8_init(usize len)
 {
     s8_owning *string = TOMATO_STRING_ALLOC(sizeof(s8_owning) + len + 1);
+    string->len = len;
     return string->str;
 }
 
@@ -26,7 +27,7 @@ s8 s8_from(usize len, const char *src)
 
 usize s8_len(s8 str)
 {
-    return ((s8_owning *)(str)-1)->len;
+    return (((s8_owning *)(str)) - 1)->len;
 }
 
 i32 s8_cmp(s8 str1, s8 str2)
@@ -61,7 +62,7 @@ s8 s8_concat(s8 str1, s8 str2)
 
 s8 s8_clone(s8 str)
 {
-    return s8_from(str, s8_len(str));
+    return s8_from(s8_len(str), str);
 }
 
 void s8_fill(s8 str, u8 data)
@@ -71,7 +72,7 @@ void s8_fill(s8 str, u8 data)
 
 i32 s8_print(s8 str)
 {
-    return printf("%.*s\n", (i32)s8_len(str), str);
+    return printf("%.*s", (i32)s8_len(str), str);
 }
 
 i32 s8_debug_print(s8 str)
@@ -82,6 +83,6 @@ i32 s8_debug_print(s8 str)
     {
         printf("%X", str[i] & 0xFF);
     }
-    printed_chars += printf("\"");
+    printed_chars += printf("\")");
     return printed_chars + 2 * s8_len(str);
 }

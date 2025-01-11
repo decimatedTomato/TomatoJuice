@@ -1,38 +1,41 @@
 #pragma once
 
-#include "defines.h"
+#include "tomato_defines.h"
 
 /* FIXME all functions which edit strings keep a null terminator (for compatibility with string.h) */
 /* FIXME add comments explaining interface */
+/* What testing framework should I use? Or should I wrote my own one? */
 /* Should I add const to everything I can? */
 /* Should I make functions that manage memory take in allocators/deallocators or use a global memory management strategy
  * like so: ?*/
 #ifndef TOMATO_STRING_ALLOC
-void free(void *);
+void free(void *); // why does intellisense warn 'Function definition for 'free' not found.' for free but not for calloc
+                   // or malloc
 #define TOMATO_STRING_FREE free
 void *calloc(size_t, size_t);
 #define TOMATO_STRING_ALLOC(X) calloc(X, sizeof(u8))
 #endif
 
 // Treats strings as arrays of unsigned bytes
-typedef u8 *s8;
+typedef char *s8;
 // Uses a private owning struct
 typedef struct
 {
     usize len;
-    u8    str[];
+    char  str[];
 } s8_owning;
 
 // TODO: Can this macro be used inline?
+/* Initializes s8 string the size of src and then copies contents from src */
 /* Note: Use macro only in scope that string was declared in */
 #define S8(c_str) s8_from(lengthof(c_str), (c_str))
 
 /* Initializes memory for s8 string */
 s8 s8_init(usize len);
 
+/* Frees and zeroes out memory from s8 string */
 void s8_free(s8 str);
 
-/* Initializes s8 string the size of src and then copies contents from src */
 s8 s8_from(usize len, const char *src);
 
 usize s8_len(s8 str);

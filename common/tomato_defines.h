@@ -5,7 +5,6 @@
 #include <stdlib.h>
 #include <uchar.h>
 
-
 typedef uint8_t   u8;
 typedef char16_t  c16;
 typedef int32_t   b32;
@@ -21,9 +20,10 @@ typedef size_t usize;
 
 // #define sizeof(x)    (size)sizeof(x)
 // #define alignof(x)   (size)_Alignof(x)
-#define countof(a) (sizeof(a) / sizeof(a[0]))
+#define countof(a) (sizeof(a) / sizeof((a)[0]))
 #define lengthof(s) (countof(s) - 1)
 
-#define assert(c)                                                                                                      \
-    while (!(c))                                                                                                       \
-    __builtin_unreachable()
+/*   #define assert(c) \
+     while (!(c)) \
+     __builtin_unreachable()
+*/
