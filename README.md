@@ -33,3 +33,9 @@
 - Write initial draft
 - Test simple cases
 - TBD
+
+## NEXT STEPS
+- Find reference repository for Google Test
+- Write example test case
+- Compile static library for s8
+- Compile test suite with s8
