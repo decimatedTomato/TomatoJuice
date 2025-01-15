@@ -15,15 +15,7 @@ typedef float     f32;
 typedef double    f64;
 typedef uintptr_t uptr;
 typedef char      byte;
-// typedef ptrdiff_t size;
-typedef size_t usize;
+typedef size_t    usize;
 
-// #define sizeof(x)    (size)sizeof(x)
-// #define alignof(x)   (size)_Alignof(x)
 #define countof(a) (sizeof(a) / sizeof((a)[0]))
 #define lengthof(s) (countof(s) - 1)
-
-/*   #define assert(c) \
-     while (!(c)) \
-     __builtin_unreachable()
-*/

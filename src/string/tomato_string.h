@@ -9,11 +9,9 @@
 /* Should I make functions that manage memory take in allocators/deallocators or use a global memory management strategy
  * like so: ?*/
 #ifndef TOMATO_STRING_ALLOC
-void free(void *); // why does intellisense warn 'Function definition for 'free' not found.' for free but not for calloc
-                   // or malloc
+#include <stdlib.h>
 #define TOMATO_STRING_FREE free
-void *calloc(size_t, size_t);
-#define TOMATO_STRING_ALLOC(X) calloc(X, sizeof(u8))
+#define TOMATO_STRING_ALLOC(X) calloc(X, sizeof(char))
 #endif
 
 // Treats strings as arrays of unsigned bytes
