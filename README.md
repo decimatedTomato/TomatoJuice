@@ -3,14 +3,27 @@
 **My reusable c code library**
 
 ## Contains:
-- Data structures
-    - hashtable (separate chaining, type generic)
+- Custom string type
 
-## TODO:
+## TODO SHORTTERM:
+- More convenient string (owning)
+    - Compatible with libc's "string.h"
+    - More efficient operations
+    - Take a string_view of it (non-owning)
+- write unit tests for string library
+- write tests using a fuzzer
+
+## NEXT STEPS
+- Figure out how to debug while testing in vscode
+
+
+
+## TODO LONGTERM:
 - Sane string
 - Data structures
     - string rope
-    - Resizable array
+    - resizable array
+    - hashtable
 - Serialization
 - Tokenizer/Parser
 - Math
@@ -18,24 +31,3 @@
 - Rendering
 - Convenience utilities
 - Memory allocators
-
-> I am back after some time and I want to continue this c utility library
-
-## TODO:
-- More convenient string (owning)
-    - Compatible with <string.h>
-    - More efficient operations
-    - Take a string_view of it (non-owning)
-- write unit tests for string library
-- write tests using a fuzzer
-
-## HOW TO ACHIEVE GOAL
-- Write initial draft
-- Test simple cases
-- TBD
-
-## NEXT STEPS
-- Find reference repository for Google Test
-- Write example test case
-- Compile static library for s8
-- Compile test suite with s8
