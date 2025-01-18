@@ -15,6 +15,8 @@
 
 ## NEXT STEPS
 - Figure out how to debug while testing in vscode
+- Is there a test you can write that checks for things like memory leaks or how much memory an allocation reserves or can you test whether memory is uninitialized?
+- What are the mocks from googletest used for, sounds like more of a c++ thing, or can I for example provide a mock malloc to test allocations?
 
 
 

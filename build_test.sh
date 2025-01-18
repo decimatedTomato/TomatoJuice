@@ -8,7 +8,7 @@ set -xe
 mkdir -p src/build
 mkdir -p test/build
 cd test/build
-cmake ..
+cmake .. #-DCMAKE_BUILD_TYPE=Debug
 devenv.com test_tomato_juice.sln -Build
 cd -
 ./test/build/Debug/test_tomato_juice

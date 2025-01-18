@@ -10,3 +10,13 @@ add_library(
     tomato_s8
     string/tomato_string.c
 )
+
+target_compile_options(
+    tomato_s8
+    PRIVATE -Werror
+    PRIVATE -Wextra
+    PRIVATE -Wall
+    PRIVATE -pedantic
+    PRIVATE -fsanitize=address
+    PRIVATE -D_FORTIFY_SOURCE=2
+)

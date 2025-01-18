@@ -10,18 +10,12 @@
  * like so: ?*/
 #ifndef TOMATO_STRING_ALLOC
 #include <stdlib.h>
-#define TOMATO_STRING_FREE free
 #define TOMATO_STRING_ALLOC(X) calloc(X, sizeof(char))
+#define TOMATO_STRING_FREE free
 #endif
 
 // Treats strings as arrays of unsigned bytes
 typedef char *s8;
-// Uses a private owning struct
-typedef struct
-{
-    usize len;
-    char  str[];
-} s8_owning;
 
 // TODO: Can this macro be used inline?
 /* Initializes s8 string the size of src and then copies contents from src */

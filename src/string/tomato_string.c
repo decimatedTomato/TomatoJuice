@@ -3,6 +3,13 @@
 #include <stdio.h>
 #include <string.h>
 
+// Uses a private owning struct
+typedef struct
+{
+    usize len;
+    char  str[];
+} s8_owning;
+
 s8 s8_init(usize len)
 {
     s8_owning *string = TOMATO_STRING_ALLOC(sizeof(s8_owning) + len + 1);
@@ -12,9 +19,7 @@ s8 s8_init(usize len)
 
 void s8_free(s8 str)
 {
-    // #ifdef DEBUG
-    memset((s8_owning *)(str)-1, 0, s8_len(str) + sizeof(s8_owning)); // Is this necessary?
-    // #endif
+    memset((s8_owning *)(str)-1, 0, s8_len(str) + sizeof(s8_owning));
     TOMATO_STRING_FREE((s8_owning *)(str)-1);
 }
 
@@ -32,9 +37,9 @@ usize s8_len(s8 str)
 
 i32 s8_cmp(s8 str1, s8 str2)
 {
-    usize size1 = s8_len(str1);
-    usize size2 = s8_len(str2);
-    i32   size_diff = size1 - size2;
+    usize     size1 = s8_len(str1);
+    usize     size2 = s8_len(str2);
+    ptrdiff_t size_diff = size1 - size2;
     if (size_diff == 0)
     {
         return memcmp(str1, str2, s8_len(str1));
@@ -81,8 +86,8 @@ i32 s8_debug_print(s8 str)
     printed_chars += printf("s8(len=%llu, str=\"", s8_len(str));
     for (usize i = 0; i < s8_len(str); i++)
     {
-        printf("%X", str[i] & 0xFF);
+        printf("%2X", str[i] & 0xFF);
     }
     printed_chars += printf("\")");
-    return printed_chars + 2 * s8_len(str);
+    return printed_chars + 2 * (i32)s8_len(str);
 }

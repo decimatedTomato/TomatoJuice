@@ -8,7 +8,7 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "command": "./test/string/build_test.sh",
+            "command": "./build_test.sh",
         }
     ]
 }

@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "preLaunchTask": "build",
             "request": "launch",
-            "program": "${workspaceFolder}/test/string/test_s8.exe",
+            "program": "${workspaceFolder}/test/build/Debug/test_tomato_juice",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${cwd}",

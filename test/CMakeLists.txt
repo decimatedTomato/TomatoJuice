@@ -24,6 +24,6 @@ target_link_libraries(
 )
 
 include(GoogleTest)
-    
+
 enable_testing()
 gtest_discover_tests(${PROJECT_NAME})
