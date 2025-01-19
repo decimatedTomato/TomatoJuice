@@ -11,6 +11,11 @@ add_library(
     string/tomato_string.c
 )
 
+target_link_options(
+    tomato_s8
+    PUBLIC -fsanitize=address
+)
+
 target_compile_options(
     tomato_s8
     PRIVATE -Werror

@@ -83,7 +83,7 @@ i32 s8_print(s8 str)
 i32 s8_debug_print(s8 str)
 {
     i32 printed_chars = 0;
-    printed_chars += printf("s8(len=%llu, str=\"", s8_len(str));
+    printed_chars += printf("s8(len=%lu, str=\"", s8_len(str));
     for (usize i = 0; i < s8_len(str); i++)
     {
         printf("%2X", str[i] & 0xFF);
