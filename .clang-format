@@ -3,3 +3,4 @@ AlignAfterOpenBracket: AlwaysBreak
 AlignConsecutiveDeclarations: true
 BinPackParameters: false
 BinPackArguments: false
+# AttributeBreakingStyle: ABS_Always

@@ -17,6 +17,11 @@ add_executable(
     string/test_s8.cpp
 )
 
+# target_compile_options(
+#     ${PROJECT_NAME}
+#     PRIVATE -g
+# )
+
 target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE GTest::gtest_main

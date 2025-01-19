@@ -25,3 +25,10 @@ target_compile_options(
     PRIVATE -fsanitize=address
     PRIVATE -D_FORTIFY_SOURCE=2
 )
+
+# if (UNIX)
+#     # Set asan symbolizer file variable
+# endif (UNIX)
+# if(WIN32)
+#     # Nothing yet
+# endif()
