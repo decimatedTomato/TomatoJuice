@@ -12,8 +12,6 @@ add_library(
 )
 
 if (UNIX)
-    # for clang
-    # export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer
     target_link_options(
         tomato_s8
         PUBLIC -fsanitize=address
@@ -24,22 +22,14 @@ if (UNIX)
         PRIVATE -Wextra
         PRIVATE -Wall
         PRIVATE -pedantic
+        PRIVATE -D_FORTIFY_SOURCE=2
     )
+    # export ASAN_SYMBOLIZER_PATH=/usr/bin/llvm-symbolizer# for clang
 endif (UNIX)
 if (WIN32)
     target_compile_options(
         tomato_s8
-        PRIVATE /INCREMENTAL:NO
         PRIVATE /fsanitize=address
+        PRIVATE /Zi
     )
-    # string(REPLACE "/RTC1" "" CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG}")
-    # set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fsanitize=address -fno-omit-frame-pointer")
 endif (WIN32)
-
-target_compile_options(
-    tomato_s8
-    PRIVATE -fsanitize=address
-    PRIVATE -D_FORTIFY_SOURCE=2
-)
-
-

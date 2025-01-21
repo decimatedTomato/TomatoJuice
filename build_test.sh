@@ -9,7 +9,7 @@ fi
 mkdir -p src/build
 mkdir -p test/build
 cd test/build
-cmake .. -DCMAKE_BUILD_TYPE
+cmake .. -DCMAKE_BUILD_TYPE=BUILD
 make
 cd -
 

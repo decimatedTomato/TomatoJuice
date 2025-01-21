@@ -1,3 +1,2 @@
 *.exe
 */build/*
-/test/vendor/googletest
