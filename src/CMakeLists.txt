@@ -29,7 +29,7 @@ endif (UNIX)
 if (WIN32)
     target_compile_options(
         tomato_s8
-        PRIVATE /fsanitize=address
-        PRIVATE /Zi
+        PUBLIC /fsanitize=address
+        PUBLIC /Zi
     )
 endif (WIN32)

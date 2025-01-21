@@ -1,9 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
-
-set(CMAKE_CXX_STANDARD 14)
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-# string(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 project(test_tomato_juice)
+
+# string(REGEX REPLACE "/RTC(su|[1su])" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
 add_subdirectory(../src ../../src/build)
 
@@ -16,17 +14,16 @@ add_executable(
     ${PROJECT_NAME}
     string/test_s8.cpp
 )
-
 if (WIN32)
+    # see https://developercommunity.visualstudio.com/t/Enabling-Address-Sanitizer-results-in-er/10053975?space=61&entry=problem&q=VSIX+project+doesn%27t+load+well+in+SSMS&scope=follow
     add_compile_definitions(
         _DISABLE_VECTOR_ANNOTATION
-    )
-    add_compile_options(
-        /fsanitize=address
-        /Zi
+        _DISABLE_STRING_ANNOTATION
     )
 endif (WIN32)
 
+set(CMAKE_CXX_STANDARD 14)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(FetchContent)
 FetchContent_Declare(
     googletest
@@ -34,6 +31,7 @@ FetchContent_Declare(
     GIT_TAG         v1.15.2
     SOURCE_DIR      googletest
 )
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 include(GoogleTest)
 
