@@ -18,6 +18,21 @@ if (WIN32)
         _DISABLE_VECTOR_ANNOTATION
         _DISABLE_STRING_ANNOTATION
     )
+
+    # reduce warnings by turning off:
+    # https://learn.microsoft.com/en-us/cpp/build/reference/rtc-run-time-error-checks?view=msvc-170
+    # https://learn.microsoft.com/en-us/cpp/build/reference/incremental-link-incrementally?view=msvc-170
+
+    # see https://stackoverflow.com/questions/65928676/vc2019-address-sanitizer-64-bit-link-error-on-windows-unresolved-external-symbo
+    # see https://devblogs.microsoft.com/cppblog/asan-for-windows-x64-and-debug-build-support/#link-exe-command-line
+    # link_libraries(
+    #     clang_rt.asan_dynamic-x86_64.lib
+    #     clang_rt.asan_dynamic_runtime_thunk-x86_64.lib
+    # )
+    link_directories(
+        "C:/Program Files/LLVM/lib/"
+        "C:/Program Files/LLVM/lib/clang/19/lib/windows"
+    )
 endif (WIN32)
 
 set(CMAKE_CXX_STANDARD 14)
