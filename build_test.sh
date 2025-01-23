@@ -8,10 +8,8 @@ fi
 
 mkdir -p src/build
 mkdir -p test/build
-cd test/build
-cmake .. -DCMAKE_BUILD_TYPE=BUILD
-make
-cd -
+cmake -S test -B test/build -DCMAKE_BUILD_TYPE=BUILD
+cmake --build test/build
 
 if [[ $1 == "run" ]]; then
     ./test/build/Debug/test_tomato_juice

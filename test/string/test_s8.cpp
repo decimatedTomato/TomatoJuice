@@ -3,18 +3,17 @@ extern "C"
 #include "tomato_string.h"
 }
 
-// #if defined(__clang__) || defined(__GNUC__)
-// #define ATTRIBUTE_NO_SANITIZE_ADDRESS __attribute__((no_sanitize_address))
-// #else
-// #define ATTRIBUTE_NO_SANITIZE_ADDRESS
-// #endif
+#if defined(__clang__) || defined(__GNUC__)
+#define ATTRIBUTE_NO_SANITIZE_ADDRESS __attribute__((no_sanitize_address))
+#else
+#define ATTRIBUTE_NO_SANITIZE_ADDRESS
+#endif
 #include <gtest/gtest.h>
 #include <string.h>
 
 /* Should there really be a unit test that takes this white box approach?
  * This test will fail if I ever change the underlying memory layout, even if that is an intentional change
  */
-// __attribute__((no_sanitize_address))
 TEST(S8_init, Underlying_data)
 {
     const usize allocated_len = 64;
@@ -26,7 +25,8 @@ TEST(S8_init, Underlying_data)
     s8_free(str_empty);
 }
 
-// __attribute__((no_sanitize_address))
+#if defined(__clang__) || defined(__GNUC__)
+ATTRIBUTE_NO_SANITIZE_ADDRESS
 TEST(S8_free, Memory_zeroed)
 {
     const s8 poem =
@@ -37,5 +37,6 @@ TEST(S8_free, Memory_zeroed)
     const usize *poem_len = reinterpret_cast<usize *>(poem) - 1;
     s8_free(poem);
     EXPECT_EQ(*poem_len, 0);
-    // EXPECT_EQ(memcmp(poem, data, sizeof(poem)), 0);
+    EXPECT_EQ(memcmp(poem, data, sizeof(poem)), 0);
 }
+#endif // clang || gnuc
