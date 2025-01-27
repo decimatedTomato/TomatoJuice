@@ -2,15 +2,27 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "(gdb) Launch",
-            "type": "cppdbg",
-            "preLaunchTask": "build",
+            "name": "Debug Windows Launch",
+            "type": "cppvsdbg",
+            "preLaunchTask": "build_windows",
             "request": "launch",
-            "program": "${workspaceFolder}/test/build/Debug/test_tomato_juice",
+            "program": "${workspaceFolder}\\test\\build\\Debug\\test_tomato_juice.exe",
             "args": [],
-            "stopAtEntry": false,
+            "stopAtEntry": true,
             "cwd": "${cwd}",
-            "environment": [],
+            // "environment": [],
+            "externalConsole": false
+        },
+        {
+            "name": "Debug Linux Launch",
+            "type": "cppdbg",
+            "preLaunchTask": "build_linux",
+            "request": "launch",
+            "program": "${workspaceFolder}/test/build/test_tomato_juice",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${cwd}",
+            // "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath": "gdb",
@@ -18,14 +30,14 @@
                 {
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
-                    "ignoreFailures": true
+                    "ignoreFailures": true,
                 },
                 {
                     "description": "Set Disassembly Flavor to Intel",
                     "text": "-gdb-set disassembly-flavor intel",
-                    "ignoreFailures": true
+                    "ignoreFailures": true,
                 }
-            ]
-        }
-    ]
+            ],
+        },
+    ],
 }

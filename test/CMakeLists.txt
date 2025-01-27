@@ -18,6 +18,9 @@ if (WIN32)
         _DISABLE_VECTOR_ANNOTATION
         _DISABLE_STRING_ANNOTATION
     )
+    add_link_options(
+        /INCREMENTAL:NO
+    )
 endif (WIN32)
 
 set(CMAKE_CXX_STANDARD 14)

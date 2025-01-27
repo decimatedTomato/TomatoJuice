@@ -1,4 +1,26 @@
 {
+    "terminal.integrated.profiles.windows": {
+        "x64 Native Tools Command Prompt for VS 2022": {
+            "path": [
+                "cmd.exe",
+            ],
+            "args": [
+                "/d",
+                "/k",
+                "C:\\Program^ Files\\Microsoft^ Visual^ Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvarsx86_amd64.bat",
+            ]
+        }
+    },
+    "terminal.integrated.automationProfile.windows": {
+        "path": "cmd.exe",
+        "args": [
+            "/d",
+            "/k",
+            "C:\\Program^ Files\\Microsoft^ Visual^ Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvarsx86_amd64.bat",
+            "&"
+        ]
+    },
+    "terminal.integrated.defaultProfile.windows": "x64 Native Tools Command Prompt for VS 2022",
     "files.associations": {
         "stdint.h": "c",
         "tomato_string.h": "c",
