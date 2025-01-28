@@ -26,82 +26,25 @@ TEST(S8_init, Underlying_data)
     s8_free(str_empty);
 }
 
-#ifdef _WIN32
-#define WIN32_LEAN_AND_MEAN
-#include <crtdbg.h>
-#include <windows.h>
-#include <winnt.h>
-
-volatile long g_alloc_depth = 0;
-int           MyAllocHook(
-              int                  allocType,
-              void                *userData,
-              size_t               size,
-              int                  blockType,
-              long                 requestNumber,
-              const unsigned char *filename,
-              int                  lineNumber)
+#define TEST_FREE_PREVIOUS TOMATO_STRING_FREE
+void test_free_injection(void *ptr)
 {
-    if (blockType == _CRT_BLOCK)
-    {
-        return 1;
-    }
-    if (InterlockedIncrement(&g_alloc_depth) > 1)
-    {
-        InterlockedDecrement(&g_alloc_depth);
-        return 1;
-    }
-    if (allocType == _HOOK_FREE)
-    {
-        const char data[sizeof(SAMPLE_TEXT)]{};
-        EXPECT_EQ(memcmp(userData, data, sizeof(SAMPLE_TEXT)), 0);
-        EXPECT_EQ(s8_len(static_cast<s8>(userData)), 0);
-    }
-    InterlockedDecrement(&g_alloc_depth);
-    return 1;
-}
-TEST(S8_free, Memory_zeroed)
-{
-    const s8   poem = S8(SAMPLE_TEXT);
-    const char data[sizeof(SAMPLE_TEXT)]{};
-    EXPECT_NE(memcmp(poem, data, sizeof(SAMPLE_TEXT)), 0);
-    EXPECT_NE(s8_len(poem), 0);
-    _CRT_ALLOC_HOOK previous_alloc_hook = _CrtSetAllocHook(MyAllocHook);
-    s8_free(poem);
-    _CrtSetAllocHook(previous_alloc_hook);
-}
-#endif // _WIN32
-#ifdef __GNUC__
-extern void __libc_free(void *ptr);
-
-bool g_free_hook_active = false;
-// see https://stackoverflow.com/a/17850402
-
-void free_hook(void *ptr)
-{
-    g_free_hook_active = false;
-    printf("Freed ptr %p from hook\n", ptr);
     const char data[sizeof(SAMPLE_TEXT)]{};
     EXPECT_EQ(memcmp(ptr, data, sizeof(SAMPLE_TEXT)), 0);
     EXPECT_EQ(s8_len(static_cast<s8>(ptr)), 0);
-    g_free_hook_active = true;
+    TEST_FREE_PREVIOUS(ptr);
 }
-void free(void *ptr)
-{
-    if (g_free_hook_active)
-    {
-        free_hook(ptr);
-    }
-    __libc_free(ptr);
-}
+
 TEST(S8_free, Memory_zeroed)
 {
     const s8   poem = S8(SAMPLE_TEXT);
     const char data[sizeof(SAMPLE_TEXT)]{};
     EXPECT_NE(memcmp(poem, data, sizeof(SAMPLE_TEXT)), 0);
     EXPECT_NE(s8_len(poem), 0);
-    g_free_hook_active = true;
+#undef TOMATO_STRING_FREE
+#define TOMATO_STRING_FREE test_free_injection
     s8_free(poem);
-    g_free_hook_active = false;
+#undef TOMATO_STRING_FREE
+#define TOMATO_STRING_FREE TEST_FREE_PREVIOUS
+#undef TEST_FREE_PREVIOUS
 }
-#endif // __GNUC__

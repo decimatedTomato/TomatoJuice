@@ -20,6 +20,7 @@ typedef char *s8;
 // TODO: Can this macro be used inline?
 /* Initializes s8 string the size of src and then copies contents from src */
 /* Note: Use macro only in scope that string was declared in */
+// TODO make macro prevent pointers from being passed
 #define S8(c_str) s8_from(lengthof(c_str), (c_str))
 
 /* Initializes memory for s8 string */

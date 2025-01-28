@@ -12,19 +12,18 @@ add_library(
 )
 
 if (UNIX)
-    target_link_options(
-        tomato_s8
-        PUBLIC -fsanitize=address
-    )
     target_compile_options(
         tomato_s8
-        # PUBLIC -g
-        # PUBLIC -fsanitize=address
+        PUBLIC -fsanitize=address
         PRIVATE -Werror
         PRIVATE -Wextra
         PRIVATE -Wall
         PRIVATE -pedantic
         PRIVATE -D_FORTIFY_SOURCE=2
+    )
+    target_link_options(
+        tomato_s8
+        PUBLIC -fsanitize=address
     )
 endif (UNIX)
 # if (CLANG)
