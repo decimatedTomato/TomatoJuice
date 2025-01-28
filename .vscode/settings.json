@@ -30,7 +30,10 @@
         "random": "c",
         "tomato_defines.h": "c",
         "stdlib.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "array": "cpp",
+        "string_view": "cpp",
+        "span": "cpp"
     },
     "editor.formatOnSave": true,
     "0": 0

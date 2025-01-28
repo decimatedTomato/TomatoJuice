@@ -22,7 +22,7 @@
             "args": [],
             "stopAtEntry": true,
             "cwd": "${cwd}",
-            // "environment": [],
+            "environment": [],
             "externalConsole": false,
             "MIMode": "gdb",
             "miDebuggerPath": "gdb",

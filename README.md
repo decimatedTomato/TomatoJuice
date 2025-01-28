@@ -33,3 +33,15 @@
 - Rendering
 - Convenience utilities
 - Memory allocators
+
+## HOW TO USE:
+- Release build has not been configured yet!
+- If using vscode for debugger interface:
+    - To debug tests on windows open "x64 Native Tools Command Prompt for VS 2022", from there open vscode
+    - For linux on WSL2 Ubuntu 22.04.5 LTS I could not get the vscode debugger working
+    - >&"warning: GDB: Failed to set controlling terminal: Operation not permitted\n"
+    [1] + Done                       "/usr/bin/gdb" --interpreter=mi --tty=${DbgTerm} 0<"/tmp/Microsoft-MIEngine-In-bx1bxyjj.nva" 1>"/tmp/Microsoft-MIEngine-Out-1lsxywui.jr1"
+
+    - Link trying to solve this: https://github.com/microsoft/WSL/issues/8356
+    - I tried downloading an older gdb that supposedly doesn't cause the problem but couldn't build it (>//<)
+    - For now I will use gdb in the command line or through the gf frontend https://github.com/nakst/gf
