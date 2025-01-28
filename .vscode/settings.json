@@ -33,7 +33,9 @@
         "stddef.h": "c",
         "array": "cpp",
         "string_view": "cpp",
-        "span": "cpp"
+        "span": "cpp",
+        "uchar.h": "c",
+        "stdio.h": "c"
     },
     "editor.formatOnSave": true,
     "0": 0
