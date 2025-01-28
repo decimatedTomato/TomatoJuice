@@ -13,8 +13,7 @@ extern "C"
     "hour.\nThen leaf subsides to leaf.\nSo Eden sank to grief,\nSo dawn goes down to day.\nNothing gold can "         \
     "stay.\n"
 
-/* Should there really be a unit test that takes this white box approach?
- * This test will fail if I ever change the underlying memory layout, even if that is an intentional change
+/* TODO move white box tests to a separate file
  */
 TEST(S8_init, Underlying_data)
 {
@@ -66,21 +65,43 @@ TEST(S8_free, Memory_zeroed)
     const s8   poem = S8(SAMPLE_TEXT);
     const char data[sizeof(SAMPLE_TEXT)]{};
     EXPECT_NE(memcmp(poem, data, sizeof(SAMPLE_TEXT)), 0);
-    EXPECT_NE(s8_len(poem), 0); // FIXME is this the right cast?
+    EXPECT_NE(s8_len(poem), 0);
     _CRT_ALLOC_HOOK previous_alloc_hook = _CrtSetAllocHook(MyAllocHook);
     s8_free(poem);
     _CrtSetAllocHook(previous_alloc_hook);
 }
-#endif
+#endif // _WIN32
 #ifdef __GNUC__
+extern void __libc_free(void *ptr);
+
+bool g_free_hook_active = false;
+// see https://stackoverflow.com/a/17850402
+
+void free_hook(void *ptr)
+{
+    g_free_hook_active = false;
+    printf("Freed ptr %p from hook\n", ptr);
+    const char data[sizeof(SAMPLE_TEXT)]{};
+    EXPECT_EQ(memcmp(ptr, data, sizeof(SAMPLE_TEXT)), 0);
+    EXPECT_EQ(s8_len(static_cast<s8>(ptr)), 0);
+    g_free_hook_active = true;
+}
+void free(void *ptr)
+{
+    if (g_free_hook_active)
+    {
+        free_hook(ptr);
+    }
+    __libc_free(ptr);
+}
 TEST(S8_free, Memory_zeroed)
 {
     const s8   poem = S8(SAMPLE_TEXT);
     const char data[sizeof(SAMPLE_TEXT)]{};
     EXPECT_NE(memcmp(poem, data, sizeof(SAMPLE_TEXT)), 0);
     EXPECT_NE(s8_len(poem), 0);
-    // TODO dylsm
+    g_free_hook_active = true;
     s8_free(poem);
-    ASSERT_FALSE(1);
+    g_free_hook_active = false;
 }
-#endif
+#endif // __GNUC__
