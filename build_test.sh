@@ -10,7 +10,7 @@ fi
 
 mkdir -p src/build
 mkdir -p test/build
-cmake -S test -B test/build -DCMAKE_BUILD_TYPE=BUILD
+cmake -S test -B test/build -DCMAKE_BUILD_TYPE=Debug
 cmake --build test/build
 
 if [[ $1 == "run" ]]; then

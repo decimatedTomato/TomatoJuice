@@ -1,6 +1,9 @@
 cmake_minimum_required(VERSION 3.22)
 project(test_tomato_juice)
 
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_CXX_STANDARD 17)
+
 set(
     TOMATO_JUICE_DIR
     ${PROJECT_SOURCE_DIR}/../src
@@ -15,7 +18,7 @@ add_executable(
 
 target_include_directories(
     ${PROJECT_NAME}
-    PUBLIC ${TOMATO_JUICE_DIR}
+    PRIVATE ${TOMATO_JUICE_DIR}
 )
 
 # if (WIN32)
@@ -29,7 +32,6 @@ target_include_directories(
 #     # )
 # endif (WIN32)
 
-set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(FetchContent)
 FetchContent_Declare(
@@ -44,7 +46,6 @@ include(GoogleTest)
 target_link_libraries(
     ${PROJECT_NAME}
     PRIVATE GTest::gtest_main
-    PRIVATE tomato_s8
 )
 enable_testing()
 gtest_discover_tests(${PROJECT_NAME})

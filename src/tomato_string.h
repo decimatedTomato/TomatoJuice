@@ -19,36 +19,46 @@
 // String type that owns its memory, sane interface available below
 typedef char *s8;
 
-// TODO: Can this macro be used inline?
 // TODO make macro prevent pointers from being passed
 /* Initializes s8 string the size of src and then copies contents from src
- * Note: Use macro only in scope that string was declared in
+ * Note: Argument must be a string literal
  */
 #define S8(c_str) s8_from(lengthof(c_str), (c_str))
 
-/* Initializes memory for s8 string */
+/* Initializes memory for string of given capacity */
 s8 s8_init(usize len);
 
-/* Frees and zeroes out memory from s8 string */
+/* Frees and zeroes out memory from string */
 void s8_free(s8 str);
 
+/* Initializes and returns string with given capacity, populated with src */
 s8 s8_from(usize len, const char *src);
 
+/* Returns the capacity of the string
+ * Note: While an extra byte may be allocated to hold the null terminator, this is not counted
+ */
 usize s8_len(s8 str);
 
+/* Compares strings lexicographically, TODO clarification */
 i32 s8_cmp(s8 str1, s8 str2);
 
+/* Determines whether two strings are identical */
 b32 s8_eq(s8 str1, s8 str2);
 
+/* Initializes and returns string with capacity to concatenate two strings end to end, populated by them */
 s8 s8_concat(s8 str1, s8 str2);
 
+/* Initializes and returns new string as exact copy of given string */
 s8 s8_clone(s8 str);
 
-void s8_fill(s8 str, u8 data);
+/* Fills a string up to capacity with one value, excluding the null terminator */
+void s8_fill(s8 str, u8 val);
 
+/* Prints the string to stdout, returns the number of characters printed */
 i32 s8_print(s8 str);
 
-i32 s8_debug_print(s8 str);
+/* Prints a debug representation of the string in hex to provided file, returns the number of characters printed */
+i32 s8_debug_print(FILE *file, s8 str);
 
 typedef struct
 {
@@ -65,8 +75,8 @@ s8 s8_init(usize len)
 
 void s8_free(s8 str)
 {
-    memset((internal_s8 *)(str)-1, 0, sizeof(internal_s8) + s8_len(str));
-    TOMATO_STRING_FREE((internal_s8 *)(str)-1);
+    memset(((internal_s8 *)str) - 1, 0, sizeof(internal_s8) + s8_len(str));
+    TOMATO_STRING_FREE(((internal_s8 *)str) - 1);
 }
 
 s8 s8_from(usize len, const char *src)
@@ -78,7 +88,7 @@ s8 s8_from(usize len, const char *src)
 
 usize s8_len(s8 str)
 {
-    return (((internal_s8 *)(str)) - 1)->len;
+    return (((internal_s8 *)str) - 1)->len;
 }
 
 i32 s8_cmp(s8 str1, s8 str2)
@@ -116,9 +126,9 @@ s8 s8_clone(s8 str)
     return s8_from(s8_len(str), str);
 }
 
-void s8_fill(s8 str, u8 data)
+void s8_fill(s8 str, u8 val)
 {
-    memset(str, data, s8_len(str));
+    memset(str, val, s8_len(str));
 }
 
 i32 s8_print(s8 str)
@@ -126,13 +136,13 @@ i32 s8_print(s8 str)
     return printf("%.*s", (i32)s8_len(str), str);
 }
 
-i32 s8_debug_print(s8 str)
+i32 s8_debug_print(FILE *file, s8 str)
 {
     i32 printed_chars = 0;
     printed_chars += printf("s8(len=%zu, str=\"", s8_len(str));
     for (usize i = 0; i < s8_len(str); i++)
     {
-        printf("%2X", str[i] & 0xFF);
+        fprintf(file, "%2X", str[i] & 0xFF);
     }
     printed_chars += printf("\")");
     return printed_chars + 2 * (i32)s8_len(str);
