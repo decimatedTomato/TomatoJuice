@@ -1,5 +1,7 @@
-#include <gtest/gtest.h>
 #include <stdlib.h>
+
+#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
 #include "tomato_defines.h"
 

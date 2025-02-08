@@ -12,4 +12,4 @@ WHERE /Q cl || CALL "C:\Program Files\Microsoft Visual Studio\2022\Community\VC\
 cmake -S test -B test\build || EXIT /B 1
 cmake --build test\build --config Debug || EXIT /B 1
 
-IF "%1"=="run" CALL test\build\Debug\test_tomato_juice.exe
+IF "%1"=="run" CALL test\build\Debug\test_tomato_juice.exe --gtest_break_on_failure

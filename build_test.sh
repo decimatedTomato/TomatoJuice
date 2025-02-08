@@ -14,5 +14,5 @@ cmake -S test -B test/build -DCMAKE_BUILD_TYPE=Debug
 cmake --build test/build
 
 if [[ $1 == "run" ]]; then
-    ./test/build/test_tomato_juice
+    ./test/build/test_tomato_juice --gtest_break_on_failure
 fi
