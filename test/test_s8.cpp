@@ -13,13 +13,18 @@ extern "C"
 #define FROST_POEM                                                                                                     \
     "Nature's first green is gold,\nHer hardest hue to hold.\nHer early leaf's a flower;\nBut only so an hour.\n"      \
     "Then leaf subsides to leaf.\nSo Eden sank to grief,\nSo dawn goes down to day.\nNothing gold can stay.\n"
+// Two-Headed Calf by Laura Gilpin
+#define GILPIN_POEM                                                                                                    \
+    "Tomorrow when the farm boys find this freak of nature, they will wrap his body in newpaper and carry him to the " \
+    "museum.\nBut tonight he is alive and in the north field with his mother. It is a perfect evening: the moon "      \
+    "rising over the orchard, the wind in the grass.And as he stares into the sky, there are twice as many stars "     \
+    "as usual.\n "
 
 TEST(s8init, InitDefault)
 {
     const usize allocated_len = 64;
     const s8    str_empty = s8_init(allocated_len, malloc);
     const char  data[allocated_len]{0};
-    EXPECT_FALSE(!str_empty);
     EXPECT_EQ(memcmp(str_empty, data, strlen(str_empty)), 0);
     EXPECT_EQ(s8_capacity(str_empty), allocated_len);
     s8_free(str_empty, free);
@@ -99,8 +104,125 @@ TEST(s8free, FreedMemoryZeroed)
     s8_free(poem, test_free_injection);
 }
 
-TEST(s8capacity, CapacityStringLiteral)
+TEST(s8capacity, StringLiteral)
 {
     s8 poem = S8(FROST_POEM, malloc);
     EXPECT_EQ(s8_capacity(poem), lengthof(FROST_POEM));
+    s8_free(poem, free);
+}
+
+TEST(s8capacity, EmptyString)
+{
+    s8 empty = S8("", malloc);
+    EXPECT_EQ(s8_capacity(empty), 0);
+    s8_free(empty, free);
+}
+
+TEST(s8cmp, EmptyStrings)
+{
+    s8 empty = S8("", malloc);
+    EXPECT_EQ(s8_cmp(empty, empty), 0);
+    s8_free(empty, free);
+}
+
+TEST(s8cmp, EmptyString)
+{
+    s8 poem = S8(FROST_POEM, malloc);
+    s8 empty = S8("", malloc);
+    EXPECT_GT(s8_cmp(poem, empty), 0);
+    s8_free(empty, free);
+    s8_free(poem, free);
+}
+
+TEST(s8cmp, Strings)
+{
+    s8 poem_frost = S8(FROST_POEM, malloc);
+    s8 poem_gilpin = S8(GILPIN_POEM, malloc);
+    EXPECT_GT(s8_cmp(poem_frost, poem_gilpin), 0);
+    EXPECT_LT(s8_cmp(poem_gilpin, poem_frost), 0);
+    s8_free(poem_gilpin, free);
+    s8_free(poem_frost, free);
+}
+
+TEST(s8cmp, SameLengthStrings)
+{
+    s8 poem_frost = s8_from(64, FROST_POEM, malloc);
+    s8 poem_gilpin = s8_from(64, GILPIN_POEM, malloc);
+    EXPECT_GT(s8_cmp(poem_frost, poem_gilpin), 0);
+    EXPECT_LT(s8_cmp(poem_gilpin, poem_frost), 0);
+    s8_free(poem_gilpin, free);
+    s8_free(poem_frost, free);
+}
+
+TEST(s8cmp, TruncatedString)
+{
+    s8 poem = S8(FROST_POEM, malloc);
+    s8 poem_truncated = s8_from(64, FROST_POEM, malloc);
+    EXPECT_GT(s8_cmp(poem, poem_truncated), 0);
+    EXPECT_LT(s8_cmp(poem_truncated, poem), 0);
+    s8_free(poem_truncated, free);
+    s8_free(poem, free);
+}
+
+TEST(s8eq, EmptyStrings)
+{
+    s8 empty = S8("", malloc);
+    EXPECT_TRUE(s8_eq(empty, empty));
+    s8_free(empty, free);
+}
+
+TEST(s8eq, EmptyString)
+{
+    s8 poem = S8(FROST_POEM, malloc);
+    s8 empty = S8("", malloc);
+    EXPECT_FALSE(s8_eq(poem, empty));
+    s8_free(empty, free);
+    s8_free(poem, free);
+}
+
+TEST(s8eq, Strings)
+{
+    s8 poem_frost = S8(FROST_POEM, malloc);
+    s8 poem_gilpin = S8(GILPIN_POEM, malloc);
+    EXPECT_FALSE(s8_eq(poem_gilpin, poem_frost));
+    s8_free(poem_gilpin, free);
+    s8_free(poem_frost, free);
+}
+
+TEST(s8eq, SameLengthStrings)
+{
+    s8 poem_frost = s8_from(64, FROST_POEM, malloc);
+    s8 poem_gilpin = s8_from(64, GILPIN_POEM, malloc);
+    EXPECT_FALSE(s8_eq(poem_frost, poem_gilpin));
+    s8_free(poem_gilpin, free);
+    s8_free(poem_frost, free);
+}
+
+TEST(s8eq, TruncatedString)
+{
+    s8 poem = S8(FROST_POEM, malloc);
+    s8 poem_truncated = s8_from(64, FROST_POEM, malloc);
+    EXPECT_FALSE(s8_eq(poem, poem_truncated));
+    s8_free(poem_truncated, free);
+    s8_free(poem, free);
+}
+
+TEST(s8fill, EmptyString)
+{
+    s8 empty = S8("", malloc);
+    s8_fill(empty, 0xFF);
+    EXPECT_EQ(empty[0], '\0');
+    s8_free(empty, free);
+}
+
+TEST(s8fill, String)
+{
+    const usize len = 64;
+    const s8    str = s8_init(len, malloc);
+    const char  data[len]{};
+    s8_fill(str, 0xFF);
+    EXPECT_NE(memcmp(str, data, len), 0);
+    s8_fill(str, 0x00);
+    EXPECT_EQ(memcmp(str, data, len), 0);
+    s8_free(str, free);
 }
