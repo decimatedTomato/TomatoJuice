@@ -13,14 +13,6 @@ extern "C"
 #define FROST_POEM                                                                                                     \
     "Nature's first green is gold,\nHer hardest hue to hold.\nHer early leaf's a flower;\nBut only so an hour.\n"      \
     "Then leaf subsides to leaf.\nSo Eden sank to grief,\nSo dawn goes down to day.\nNothing gold can stay.\n"
-// Two-Headed Calf by Laura Gilpin
-#define GILPIN_0                                                                                                       \
-    "Tomorrow when the farm boys find this freak of nature, they will wrap his body in newpaper and carry him to the " \
-    "museum.\n "
-#define GILPIN_1                                                                                                       \
-    "But tonight he is alive and in the north field with his mother. It is a perfect evening: the moon rising over "   \
-    "the orchard, the wind in the grass.And as he stares into the sky, there are twice as many stars "                 \
-    "as usual.\n "
 
 TEST(s8init, InitDefault)
 {
@@ -63,46 +55,6 @@ TEST(s8from, FromStringSmallerThanBuffer)
     EXPECT_EQ(s8_capacity(poem_extraneous), allocated_len);
     EXPECT_EQ(memcmp(poem_extraneous, FROST_POEM, sizeof(FROST_POEM)), 0);
     s8_free(poem_extraneous, free);
-}
-
-TEST(s8concat, Sizes)
-{
-    const s8 poem = s8_concat(GILPIN_0, GILPIN_1, malloc);
-    EXPECT_EQ(s8_capacity(poem), lengthof(GILPIN_0) + lengthof(GILPIN_1));
-    EXPECT_EQ(poem[lengthof(GILPIN_0) + lengthof(GILPIN_1)], '\0');
-    s8_free(poem, free);
-}
-
-TEST(s8concat, Strings)
-{
-    const s8 poem = s8_concat(GILPIN_0, GILPIN_1, malloc);
-    EXPECT_EQ(memcmp(poem, GILPIN_0, lengthof(GILPIN_0)), 0);
-    EXPECT_EQ(memcmp(poem, GILPIN_1 + lengthof(GILPIN_0), sizeof(GILPIN_1)), 0);
-    s8_free(poem, free);
-}
-
-TEST(s8concat, EmptyString)
-{
-    const s8 poem = S8(FROST_POEM, malloc);
-    const s8 nothing = S8("", malloc);
-    const s8 poem_changed = s8_concat(poem, nothing, malloc);
-    const s8 poem_of_theseus = s8_concat(nothing, poem_changed, malloc);
-    EXPECT_EQ(memcmp(poem_changed, FROST_POEM, sizeof(FROST_POEM)), 0);
-    EXPECT_EQ(memcmp(poem_of_theseus, FROST_POEM, sizeof(FROST_POEM)), 0);
-    s8_free(poem_of_theseus, free);
-    s8_free(poem_changed, free);
-    s8_free(nothing, free);
-    s8_free(poem, free);
-}
-
-TEST(s8concat, EmptyStrings)
-{
-    const s8 nothing = S8("", malloc);
-    const s8 empty = s8_concat(nothing, nothing, malloc);
-    EXPECT_EQ(s8_capacity(empty), 0);
-    EXPECT_EQ(empty[0], '\0');
-    s8_free(empty, free);
-    s8_free(nothing, free);
 }
 
 TEST(s8clone, String)

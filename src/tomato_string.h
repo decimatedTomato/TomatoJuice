@@ -25,11 +25,6 @@ s8 s8_init(usize len, tomato_alloc alloc);
  */
 s8 s8_from(usize len, const char *src, tomato_alloc alloc);
 
-/* Initializes and returns string with capacity to concatenate two strings end to end, populated by them,
- * using provided allocator.
- */
-s8 s8_concat(s8 str1, s8 str2, tomato_alloc alloc);
-
 /* Initializes and returns new string as exact copy of given string using provided allocator. */
 s8 s8_clone(s8 str, tomato_alloc alloc);
 
@@ -98,18 +93,6 @@ s8 s8_from(usize len, const char *src, tomato_alloc alloc)
     const usize cpy_len = (next_null_terminator == nullptr) ? len : (char *)next_null_terminator - src;
     memcpy(out, src, cpy_len);
     out[cpy_len] = '\0';
-    return out;
-}
-
-s8 s8_concat(s8 str1, s8 str2, tomato_alloc alloc)
-{
-    if (str1 == nullptr || str2 == nullptr || alloc == nullptr)
-        return nullptr;
-    s8 out = s8_init(s8_capacity(str1) + s8_capacity(str2), alloc);
-    if (out == nullptr)
-        return nullptr;
-    memcpy(out, str1, s8_capacity(str1));
-    memcpy(out + s8_capacity(str1), str2, s8_capacity(str2));
     return out;
 }
 
