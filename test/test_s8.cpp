@@ -3,50 +3,152 @@
 #include "gtest/gtest.h"
 #include <gtest/gtest.h>
 
-#include "tomato_defines.h"
-
-#pragma region whitebox_tests_setup
-#define SAMPLE_TEXT                                                                                                    \
-    "Nature's first green is gold,\nHer hardest hue to hold.\nHer early leaf's a flower;\nBut only so an "             \
-    "hour.\nThen leaf subsides to leaf.\nSo Eden sank to grief,\nSo dawn goes down to day.\nNothing gold can "         \
-    "stay.\n"
-
-void test_free_injection(void *ptr)
-{
-    const char data[sizeof(SAMPLE_TEXT)]{};
-    EXPECT_EQ(memcmp(ptr, data, sizeof(SAMPLE_TEXT)), 0);
-    EXPECT_EQ(*(static_cast<usize *>(ptr) - 1), 0);
-    free(ptr);
-}
-#define TOMATO_STRING_ALLOC(X) calloc(X, sizeof(char))
-#define TOMATO_STRING_FREE test_free_injection
-#pragma endregion white_box_tests_setup
-
 extern "C"
 {
+#include "tomato_defines.h"
 #include "tomato_string.h"
 }
 
-#pragma region whitebox_tests
-TEST(S8free, FreedMemoryZeroed)
-{
-    const s8   poem = S8(SAMPLE_TEXT);
-    const char data[sizeof(SAMPLE_TEXT)]{};
-    EXPECT_NE(memcmp(poem, data, sizeof(SAMPLE_TEXT)), 0);
-    EXPECT_NE(s8_len(poem), 0);
-    s8_free(poem);
-}
-#pragma endregion whitebox_tests
+// Nothing Gold Can Stay by Robert Frost
+#define FROST_POEM                                                                                                     \
+    "Nature's first green is gold,\nHer hardest hue to hold.\nHer early leaf's a flower;\nBut only so an hour.\n"      \
+    "Then leaf subsides to leaf.\nSo Eden sank to grief,\nSo dawn goes down to day.\nNothing gold can stay.\n"
+// Two-Headed Calf by Laura Gilpin
+#define GILPIN_0                                                                                                       \
+    "Tomorrow when the farm boys find this freak of nature, they will wrap his body in newpaper and carry him to the " \
+    "museum.\n "
+#define GILPIN_1                                                                                                       \
+    "But tonight he is alive and in the north field with his mother. It is a perfect evening: the moon rising over "   \
+    "the orchard, the wind in the grass.And as he stares into the sky, there are twice as many stars "                 \
+    "as usual.\n "
 
-#pragma region blackbox_tests
-TEST(S8init, DefaultConstruction)
+TEST(s8init, InitDefault)
 {
     const usize allocated_len = 64;
-    const s8    str_empty = s8_init(allocated_len);
-    const char  data[allocated_len]{};
+    const s8    str_empty = s8_init(allocated_len, malloc);
+    const char  data[allocated_len]{0};
     EXPECT_FALSE(!str_empty);
-    EXPECT_EQ(memcmp(str_empty, data, allocated_len), 0);
-    EXPECT_EQ(s8_len(str_empty), allocated_len);
-    s8_free(str_empty);
+    EXPECT_EQ(memcmp(str_empty, data, strlen(str_empty)), 0);
+    EXPECT_EQ(s8_capacity(str_empty), allocated_len);
+    s8_free(str_empty, free);
 }
-#pragma endregion
+
+TEST(s8from, FromStringLargerThanBuffer)
+{
+    const usize allocated_len = 64;
+    EXPECT_LT(allocated_len, sizeof(FROST_POEM));
+    const s8 poem_truncated = s8_from(allocated_len, FROST_POEM, malloc);
+    EXPECT_EQ(s8_capacity(poem_truncated), allocated_len);
+    EXPECT_EQ(memcmp(poem_truncated, FROST_POEM, allocated_len), 0);
+    EXPECT_EQ(poem_truncated[allocated_len], '\0');
+    EXPECT_NE(poem_truncated[allocated_len], FROST_POEM[allocated_len]);
+    s8_free(poem_truncated, free);
+}
+
+TEST(s8from, FromStringEquallySizedToBuffer)
+{
+    const usize allocated_len = lengthof(FROST_POEM);
+    const s8    poem_snug = s8_from(allocated_len, FROST_POEM, malloc);
+    EXPECT_EQ(s8_capacity(poem_snug), allocated_len);
+    EXPECT_EQ(memcmp(poem_snug, FROST_POEM, allocated_len), 0);
+    EXPECT_EQ(poem_snug[allocated_len], '\0');
+    EXPECT_EQ(poem_snug[allocated_len], FROST_POEM[allocated_len]);
+    s8_free(poem_snug, free);
+}
+
+TEST(s8from, FromStringSmallerThanBuffer)
+{
+    const usize allocated_len = sizeof(FROST_POEM) + 32;
+    const s8    poem_extraneous = s8_from(allocated_len, FROST_POEM, malloc);
+    EXPECT_EQ(s8_capacity(poem_extraneous), allocated_len);
+    EXPECT_EQ(memcmp(poem_extraneous, FROST_POEM, sizeof(FROST_POEM)), 0);
+    s8_free(poem_extraneous, free);
+}
+
+TEST(s8concat, Sizes)
+{
+    const s8 poem = s8_concat(GILPIN_0, GILPIN_1, malloc);
+    EXPECT_EQ(s8_capacity(poem), lengthof(GILPIN_0) + lengthof(GILPIN_1));
+    EXPECT_EQ(poem[lengthof(GILPIN_0) + lengthof(GILPIN_1)], '\0');
+    s8_free(poem, free);
+}
+
+TEST(s8concat, Strings)
+{
+    const s8 poem = s8_concat(GILPIN_0, GILPIN_1, malloc);
+    EXPECT_EQ(memcmp(poem, GILPIN_0, lengthof(GILPIN_0)), 0);
+    EXPECT_EQ(memcmp(poem, GILPIN_1 + lengthof(GILPIN_0), sizeof(GILPIN_1)), 0);
+    s8_free(poem, free);
+}
+
+TEST(s8concat, EmptyString)
+{
+    const s8 poem = S8(FROST_POEM, malloc);
+    const s8 nothing = S8("", malloc);
+    const s8 poem_changed = s8_concat(poem, nothing, malloc);
+    const s8 poem_of_theseus = s8_concat(nothing, poem_changed, malloc);
+    EXPECT_EQ(memcmp(poem_changed, FROST_POEM, sizeof(FROST_POEM)), 0);
+    EXPECT_EQ(memcmp(poem_of_theseus, FROST_POEM, sizeof(FROST_POEM)), 0);
+    s8_free(poem_of_theseus, free);
+    s8_free(poem_changed, free);
+    s8_free(nothing, free);
+    s8_free(poem, free);
+}
+
+TEST(s8concat, EmptyStrings)
+{
+    const s8 nothing = S8("", malloc);
+    const s8 empty = s8_concat(nothing, nothing, malloc);
+    EXPECT_EQ(s8_capacity(empty), 0);
+    EXPECT_EQ(empty[0], '\0');
+    s8_free(empty, free);
+    s8_free(nothing, free);
+}
+
+TEST(s8clone, String)
+{
+    const s8 poem = S8(FROST_POEM, malloc);
+    const s8 forgery = s8_clone(poem, malloc);
+    EXPECT_EQ(memcmp(poem, forgery, sizeof(FROST_POEM)), 0);
+    EXPECT_EQ(s8_capacity(poem), s8_capacity(forgery));
+    EXPECT_NE(poem, forgery);
+    s8_free(forgery, free);
+    s8_free(poem, free);
+}
+
+TEST(s8clone, EmptyString)
+{
+    const s8 nothing = S8("", malloc);
+    const s8 empty = s8_clone(nothing, malloc);
+    EXPECT_EQ(nothing[0], 0);
+    EXPECT_EQ(s8_capacity(nothing), 0);
+    s8_free(empty, free);
+    s8_free(nothing, free);
+}
+
+void test_free_injection(void *ptr)
+{
+    const char data[sizeof(FROST_POEM)]{};
+    EXPECT_EQ(memcmp(ptr, data, sizeof(FROST_POEM)), 0);
+    EXPECT_EQ(*(static_cast<usize *>(ptr) - 1), 0);
+    free(ptr);
+}
+
+/**
+ * This is a black box test, using some knowledge of the implementation of s8.
+ * Assumes that the implemenation contains a size_t right before the pointer.
+ */
+TEST(s8free, FreedMemoryZeroed)
+{
+    const s8   poem = S8(FROST_POEM, malloc);
+    const char data[sizeof(FROST_POEM)]{};
+    EXPECT_NE(memcmp(poem, data, sizeof(FROST_POEM)), 0);
+    EXPECT_NE(s8_capacity(poem), 0);
+    s8_free(poem, test_free_injection);
+}
+
+TEST(s8capacity, CapacityStringLiteral)
+{
+    s8 poem = S8(FROST_POEM, malloc);
+    EXPECT_EQ(s8_capacity(poem), lengthof(FROST_POEM));
+}
