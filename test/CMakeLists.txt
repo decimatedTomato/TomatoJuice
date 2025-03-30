@@ -4,8 +4,6 @@ project(test_tomato_juice)
 set(CMAKE_C_STANDARD 17)
 set(CMAKE_CXX_STANDARD 17)
 
-# Consider making build with asan a flag
-
 set(
     TOMATO_JUICE_DIR
     ${PROJECT_SOURCE_DIR}/../src
@@ -28,7 +26,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message( STATUS "Compiler is GNU")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    # message( STATUS "Compiler is MSVC")
     target_compile_options(
         ${PROJECT_NAME}
         PRIVATE /fsanitize=address
@@ -44,12 +41,6 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         PRIVATE _DISABLE_STRING_ANNOTATION
     )
 endif()
-# if (WIN32)
-#     # see https://developercommunity.visualstudio.com/t/Enabling-Address-Sanitizer-results-in-er/10053975?space=61&entry=problem&q=VSIX+project+doesn%27t+load+well+in+SSMS&scope=follow
-#     # add_link_options(
-#     #     /INCREMENTAL:NO
-#     # )
-# endif (WIN32)
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(FetchContent)

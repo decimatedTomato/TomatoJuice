@@ -20,3 +20,6 @@ typedef size_t    usize;
 
 #define countof(a) (sizeof(a) / sizeof((a)[0]))
 #define lengthof(s) (countof(s) - 1)
+
+typedef void *(tomato_alloc)(usize);
+typedef void(tomato_free)(void *);

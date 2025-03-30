@@ -1,42 +1,10 @@
 {
-    "terminal.integrated.profiles.windows": {
-        "x64 Native Tools Command Prompt for VS 2022": {
-            "path": [
-                "cmd.exe",
-            ],
-            "args": [
-                "/d",
-                "/k",
-                "C:\\Program^ Files\\Microsoft^ Visual^ Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvarsx86_amd64.bat",
-            ]
-        }
-    },
-    "terminal.integrated.automationProfile.windows": {
-        "path": "cmd.exe",
-        "args": [
-            "/d",
-            "/k",
-            "C:\\Program^ Files\\Microsoft^ Visual^ Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvarsx86_amd64.bat",
-            "&"
-        ]
-    },
-    "terminal.integrated.defaultProfile.windows": "x64 Native Tools Command Prompt for VS 2022",
-    "files.associations": {
-        "stdint.h": "c",
-        "tomato_string.h": "c",
-        "string.h": "c",
-        "defines.h": "c",
-        "string": "c",
-        "random": "c",
-        "tomato_defines.h": "c",
-        "stdlib.h": "c",
-        "stddef.h": "c",
-        "array": "cpp",
-        "string_view": "cpp",
-        "span": "cpp",
-        "uchar.h": "c",
-        "stdio.h": "c"
-    },
     "editor.formatOnSave": true,
-    "0": 0
+    "editor.rulers": [
+        120
+    ],
+    "0": 0,
+    "files.associations": {
+        "string": "cpp"
+    }
 }
