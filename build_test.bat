@@ -1,14 +1,12 @@
 @ECHO OFF
 
 if "%1"=="clean" (
-    IF EXIST "src\build" RD "src\build" /S /Q
-    IF EXIST "test\build" RD "test\build" /S /Q
+    IF EXIST "bin" RD "bin" /S /Q
     shift /1
 )
-IF NOT EXIST "src\build" MD "src\build"
-IF NOT EXIST "test\build" MD "test\build"
+IF NOT EXIST "bin" MD "bin"
 
-cmake -S test -B test\build || EXIT /B 1
-cmake --build test\build --config Debug || EXIT /B 1
+cmake -S . -B bin || EXIT /B 1
+cmake --build bin --config Optimized || EXIT /B 1
 
-IF "%1"=="run" CALL test\build\Debug\test_tomato_juice.exe --gtest_break_on_failure
+IF "%1"=="run" CALL bin\test\test_tomato_juice.exe --gtest_break_on_failure

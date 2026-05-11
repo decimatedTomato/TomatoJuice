@@ -1,61 +1,52 @@
 cmake_minimum_required(VERSION 3.22)
-project(test_tomato_juice)
+project(tomato_juice_test LANGUAGES CXX)
 
-set(CMAKE_C_STANDARD 17)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_C_STANDARD 23)
+set(CMAKE_CXX_STANDARD 23)
 
-set(
-    TOMATO_JUICE_DIR
-    ${PROJECT_SOURCE_DIR}/../src
-)
+set(TOMATO_SRC_DIR ../src)
 
 add_executable(
-    ${PROJECT_NAME}
+    test_tomato_juice
     ${PROJECT_SOURCE_DIR}/test_s8.cpp
-    ${TOMATO_JUICE_DIR}/tomato_defines.h
-    ${TOMATO_JUICE_DIR}/tomato_string.h
+    ${TOMATO_SRC_DIR}/tomato_defines.h
+    ${TOMATO_SRC_DIR}/tomato_string.h
 )
 
 target_include_directories(
-    ${PROJECT_NAME}
-    PRIVATE ${TOMATO_JUICE_DIR}
+    test_tomato_juice
+    PRIVATE ${TOMATO_SRC_DIR}
 )
 
+include(gtest.cmake)
+
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    message( FATAL_ERROR  "Compiler is Clang")
+    message(FATAL_ERROR  "Compiler is Clang")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-    message( STATUS "Compiler is GNU")
-elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    message(STATUS "Compiler is GNU")
     target_compile_options(
-        ${PROJECT_NAME}
+        test_tomato_juice
+        PRIVATE -fsanitize=address
+    )
+    target_link_options(
+        test_tomato_juice
+        PRIVATE -fsanitize=address
+    )
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+    message(STATUS "Compiler is MSVC")
+    target_compile_options(
+        test_tomato_juice
         PRIVATE /fsanitize=address
     )
     target_link_options(
-        ${PROJECT_NAME}
+        test_tomato_juice
         PRIVATE /DEBUG:FULL
-        PRIVATE /INCREMENTAL:NO
-    )
-    target_compile_definitions(
-        ${PROJECT_NAME}
-        PRIVATE _DISABLE_VECTOR_ANNOTATION
-        PRIVATE _DISABLE_STRING_ANNOTATION
     )
 endif()
 
-set(CMAKE_CXX_STANDARD_REQUIRED ON)
-include(FetchContent)
-FetchContent_Declare(
-    googletest
-    GIT_REPOSITORY  https://github.com/google/googletest.git
-    GIT_TAG         v1.15.2
-    SOURCE_DIR      googletest
-)
-set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
-FetchContent_MakeAvailable(googletest)
-include(GoogleTest)
 target_link_libraries(
-    ${PROJECT_NAME}
+    test_tomato_juice
+    PRIVATE tomato_string
     PRIVATE GTest::gtest_main
 )
-enable_testing()
-gtest_discover_tests(${PROJECT_NAME})
+gtest_discover_tests(test_tomato_juice)

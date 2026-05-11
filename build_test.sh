@@ -3,16 +3,15 @@
 set -e
 
 if [[ $1 == "clean" ]]; then
-    rm -rf src/build/
-    rm -rf test/build/
+    rm -rf bin
     shift 1
 fi
 
-mkdir -p src/build
-mkdir -p test/build
-cmake -S test -B test/build -DCMAKE_BUILD_TYPE=Debug
-cmake --build test/build
+mkdir -p bin
+cmake -S . -B bin -DCMAKE_BUILD_TYPE=RelWithDebInfo
+cmake --build bin
 
 if [[ $1 == "run" ]]; then
-    ./test/build/test_tomato_juice --gtest_break_on_failure
+    # ./bin/test/test_tomato_juice --gtest_break_on_failure
+    ./bin/test/test_tomato_juice
 fi

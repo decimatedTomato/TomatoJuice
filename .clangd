@@ -1,0 +1,20 @@
+CompileFlags:
+  Add: [
+    -DDEBUG,
+    -I../src,
+    -xc,
+    -std=c23,
+    -Wall,
+    -Wextra,
+    -Werror,
+    -pedantic
+  ]
+---
+If:
+  PathMatch: test/.*
+CompileFlags:
+  Add: [
+    -xc++,
+    -std=c++23,
+    -I../bin/test/googletest/googletest/include
+  ]

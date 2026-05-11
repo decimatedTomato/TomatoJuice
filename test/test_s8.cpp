@@ -1,7 +1,6 @@
 #include <stdlib.h>
 
 #include "gtest/gtest.h"
-#include <gtest/gtest.h>
 
 extern "C"
 {
@@ -138,8 +137,8 @@ TEST(s8cmp, Strings)
 {
     s8 poem_frost = S8(FROST_POEM, malloc);
     s8 poem_gilpin = S8(GILPIN_POEM, malloc);
-    EXPECT_GT(s8_cmp(poem_frost, poem_gilpin), 0);
-    EXPECT_LT(s8_cmp(poem_gilpin, poem_frost), 0);
+    EXPECT_LT(s8_cmp(poem_frost, poem_gilpin), 0);
+    EXPECT_GT(s8_cmp(poem_gilpin, poem_frost), 0);
     s8_free(poem_gilpin, free);
     s8_free(poem_frost, free);
 }
@@ -148,8 +147,8 @@ TEST(s8cmp, SameLengthStrings)
 {
     s8 poem_frost = s8_from(64, FROST_POEM, malloc);
     s8 poem_gilpin = s8_from(64, GILPIN_POEM, malloc);
-    EXPECT_GT(s8_cmp(poem_frost, poem_gilpin), 0);
-    EXPECT_LT(s8_cmp(poem_gilpin, poem_frost), 0);
+    EXPECT_LT(s8_cmp(poem_frost, poem_gilpin), 0);
+    EXPECT_GT(s8_cmp(poem_gilpin, poem_frost), 0);
     s8_free(poem_gilpin, free);
     s8_free(poem_frost, free);
 }

@@ -2,16 +2,17 @@
 
 **My reusable c code library**
 
-## Contains:
+## CONTAINS:
 - Custom string type
 
 ## HOW TO USE:
-Copy header files from src/ into your project.
+Import one of the libraries into your project and include the associated header.
+
+## REQUIREMENTS:
+- C compiler with C23 support.
 
 ## TODO SHORTTERM:
 - More convenient string (owning)
-    - Compatible with libc's "string.h"
-    - More efficient operations
     - Take a string_view of it (non-owning)
 - write unit tests for string library
 - write tests using a fuzzer
@@ -35,6 +36,8 @@ Copy header files from src/ into your project.
 - Rendering
 - Convenience utilities
 - Memory allocators
+- Replace clang-format with clang-tidy
+- Add support for mingw
 
 ## HOW TO TEST:
 - On windows:
@@ -53,5 +56,4 @@ Copy header files from src/ into your project.
     - >&"warning: GDB: Failed to set controlling terminal: Operation not permitted\n"
     [1] + Done                       "/usr/bin/gdb" --interpreter=mi --tty=${DbgTerm} 0<"/tmp/Microsoft-MIEngine-In-bx1bxyjj.nva" 1>"/tmp/Microsoft-MIEngine-Out-1lsxywui.jr1"
     - Link trying to solve this: https://github.com/microsoft/WSL/issues/8356
-    - I tried downloading an older gdb that supposedly doesn't cause the problem but couldn't build it (>//<) since my gcc is too new
     - I am able to use gdb in the command line or through the gf frontend https://github.com/nakst/gf
