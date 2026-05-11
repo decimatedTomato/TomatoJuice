@@ -6,7 +6,7 @@
     {                                                                                                                  \
         size_t size;                                                                                                   \
         size_t capacity;                                                                                               \
-        TYPE   buffer[0];                                                                                              \
+        TYPE   buffer[];                                                                                               \
     } vector_##TYPE;                                                                                                   \
     vector_##TYPE *vector_new_##TYPE(size_t capacity)                                                                  \
     {                                                                                                                  \
