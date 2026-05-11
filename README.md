@@ -3,7 +3,9 @@
 **My reusable c code library**
 
 ## CONTAINS:
-- Custom string type
+- Memory allocator concept
+- Sane strings
+- Resizable vectors
 
 ## HOW TO USE:
 Import one of the libraries into your project and include the associated header.
@@ -16,22 +18,20 @@ Import one of the libraries into your project and include the associated header.
 - Linux with gcc
 
 ## TODO SHORTTERM:
-- More convenient string (owning)
-    - Take a string_view of it (non-owning)
-- write unit tests for string library
-- write tests using a fuzzer
+- Strings
+    - Improve printing functionality with format specifier macro
+    - Stringbuf (owning)
+        - tests
+    - string_view of it (non-owning)
+        - write unit tests for string library
+    - how?
 
-## NEXT STEPS:
-- Make targets tests with/without asan.
-- Can you test whether memory is uninitialized?
-- What are the mocks from googlemock used for, sounds like more of a c++ thing, or can I for example provide a mock malloc to test allocations?
-
+## QUESTION
+- Shouldn't the memory-aware types store a pointer to the allocator context so they know how to free themselves?
 
 ## TODO LONGTERM:
-- Sane string
 - Data structures
     - string rope
-    - resizable array
     - hashtable
 - Serialization
 - Tokenizer/Parser
@@ -39,11 +39,15 @@ Import one of the libraries into your project and include the associated header.
 - Physics
 - Rendering
 - Convenience utilities
-- Memory allocators
 - Replace clang-format with clang-tidy
 - Add support for mingw
 - Add support for clang on linux
 - Add support for clang-cl on windows
+- Give options to build as static libraries or dynamic ones
+- Make address sanitizers optional in tests
+- write tests using a fuzzer
+    - how?
+- Can fixtures be used to make tests more efficient?
 
 ## HOW TO TEST:
 - On windows:
