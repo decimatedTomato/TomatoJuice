@@ -2,6 +2,8 @@
 
 #include <string.h>
 
+#include "tomato_allocator.h"
+
 typedef struct
 {
     usize len;
@@ -13,11 +15,11 @@ static internal_s8 *get_internal(s8 str)
     return ((internal_s8 *)str) - 1;
 }
 
-s8 s8_init(usize len, tomato_alloc alloc)
+s8 s8_init(usize len, TomatoAllocCtx *ctx)
 {
-    if (alloc == nullptr)
+    if (ctx == nullptr)
         return nullptr;
-    internal_s8 *string = (internal_s8 *)alloc(sizeof(internal_s8) + len + 1);
+    internal_s8 *string = (internal_s8 *)ctx->alloc(sizeof(internal_s8) + len + 1, ctx->allocator_internals);
     if (string == nullptr)
         return nullptr;
     string->len = len;
@@ -25,11 +27,11 @@ s8 s8_init(usize len, tomato_alloc alloc)
     return string->str;
 }
 
-s8 s8_from(usize len, const char *src, tomato_alloc alloc)
+s8 s8_from(usize len, const char *src, TomatoAllocCtx *ctx)
 {
-    if (src == nullptr || alloc == nullptr)
+    if (src == nullptr || ctx == nullptr)
         return nullptr;
-    s8 out = s8_init(len, alloc);
+    s8 out = s8_init(len, ctx);
     if (out == nullptr)
         return nullptr;
     const void *next_null_terminator = memchr(src, '\0', len);
@@ -39,21 +41,21 @@ s8 s8_from(usize len, const char *src, tomato_alloc alloc)
     return out;
 }
 
-s8 s8_clone(s8 str, tomato_alloc alloc)
+s8 s8_clone(s8 str, TomatoAllocCtx *ctx)
 {
-    if (str == nullptr || alloc == nullptr)
+    if (str == nullptr || ctx == nullptr)
         return nullptr;
-    return s8_from(s8_capacity(str), str, alloc);
+    return s8_from(s8_capacity(str), str, ctx);
 }
 
-void s8_free(s8 str, tomato_free free)
+void s8_free(s8 str, TomatoAllocCtx *ctx)
 {
     if (str == nullptr)
         return;
     // TODO: Test this behavior
     memset(get_internal(str), 0, sizeof(internal_s8) + s8_capacity(str));
-    if (free != nullptr)
-        free(get_internal(str));
+    if (ctx != nullptr)
+        ctx->free(get_internal(str), ctx->allocator_internals);
 }
 
 usize s8_capacity(s8 str)

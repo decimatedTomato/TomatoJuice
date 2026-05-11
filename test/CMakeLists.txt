@@ -9,8 +9,6 @@ set(TOMATO_SRC_DIR ../src)
 add_executable(
     test_tomato_juice
     ${PROJECT_SOURCE_DIR}/test_s8.cpp
-    ${TOMATO_SRC_DIR}/tomato_defines.h
-    ${TOMATO_SRC_DIR}/tomato_string.h
 )
 
 target_include_directories(
