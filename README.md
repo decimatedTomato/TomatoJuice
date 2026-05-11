@@ -11,6 +11,10 @@ Import one of the libraries into your project and include the associated header.
 ## REQUIREMENTS:
 - C compiler with C23 support.
 
+## SUPPORTED PLATFORMS
+- Windows with MSVC
+- Linux with gcc
+
 ## TODO SHORTTERM:
 - More convenient string (owning)
     - Take a string_view of it (non-owning)
@@ -38,6 +42,8 @@ Import one of the libraries into your project and include the associated header.
 - Memory allocators
 - Replace clang-format with clang-tidy
 - Add support for mingw
+- Add support for clang on linux
+- Add support for clang-cl on windows
 
 ## HOW TO TEST:
 - On windows:
