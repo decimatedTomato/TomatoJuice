@@ -7,7 +7,7 @@ CompileFlags:
     -Wall,
     -Wextra,
     -Werror,
-    -pedantic
+    -pedantic,
   ]
 ---
 If:
