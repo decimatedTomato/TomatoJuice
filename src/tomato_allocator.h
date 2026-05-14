@@ -2,16 +2,23 @@
 
 #include "tomato_defines.h"
 
-typedef struct TomatoAllocatorContext TomatoAllocCtx;
-
 typedef void *(*tomato_alloc)(usize size, void *allocator_internals);
+typedef void *(*tomato_realloc)(void *buffer, usize size, void *allocator_internals);
 typedef void (*tomato_free)(void *buffer, void *allocator_internals);
 
-struct TomatoAllocatorContext
+typedef struct
 {
     tomato_alloc alloc;
     tomato_free  free;
     void        *allocator_internals;
-};
+} TomatoAllocCtx;
 
-extern TomatoAllocCtx libc_malloc_ctx;
+typedef struct
+{
+    tomato_realloc realloc;
+    tomato_free    free;
+    void          *allocator_internals;
+} TomatoReallocCtx;
+
+extern TomatoAllocCtx   libc_malloc_ctx;
+extern TomatoReallocCtx libc_realloc_ctx;
