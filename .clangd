@@ -1,17 +1,35 @@
+# Default flags
 CompileFlags:
   Add: [
     -DDEBUG,
     -I../src,
-    -xc,
-    -std=c23,
     -Wall,
     -Wextra,
     -Werror,
     -pedantic,
   ]
 ---
+# Flags for .h files
 If:
-  PathMatch: test/.*
+  PathMatch: .*\.h
+CompileFlags:
+  Add: [
+    -xc-header,
+    -std=c23,
+  ]
+---
+# Flags for .c files
+If:
+  PathMatch: .*\.c
+CompileFlags:
+  Add: [
+    -xc,
+    -std=c23,
+  ]
+---
+# Flags for .cpp files
+If:
+  PathMatch: .*\.cpp
 CompileFlags:
   Add: [
     -xc++,
