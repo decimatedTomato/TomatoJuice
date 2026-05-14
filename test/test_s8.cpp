@@ -1,5 +1,3 @@
-#include <cstdlib>
-
 #include "gtest/gtest.h"
 
 extern "C"

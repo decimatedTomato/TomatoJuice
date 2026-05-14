@@ -18,13 +18,15 @@ Import one of the libraries into your project and include the associated header.
 - Linux with gcc
 
 ## TODO SHORTTERM:
+- Improve interface of generic dynamic arrays
+    - tests
+    - make allocator aware?
 - Strings
     - Improve printing functionality with format specifier macro
     - Stringbuf (owning)
         - tests
     - string_view of it (non-owning)
         - write unit tests for string library
-    - how?
 
 ## QUESTION
 - Shouldn't the memory-aware types store a pointer to the allocator context so they know how to free themselves?
@@ -33,6 +35,8 @@ Import one of the libraries into your project and include the associated header.
 - Data structures
     - string rope
     - hashtable
+- Custom assert that triggers in all build types and includes formatted text and
+    - Logging could also fit in here
 - Serialization
 - Tokenizer/Parser
 - Math
