@@ -9,6 +9,7 @@ set(TOMATO_SRC_DIR ../src)
 add_executable(
     test_tomato_juice
     ${PROJECT_SOURCE_DIR}/test_s8.cpp
+    ${PROJECT_SOURCE_DIR}/test_da.cpp
 )
 
 target_include_directories(

@@ -1,11 +1,11 @@
-// #pragma once
-
-void         *memmove(void *dest, const void *src, size_t count);
-long long int llround(double x);
-#define max(a, b) (((a) > (b)) ? (a) : (b))
+#pragma once
 
 #include "tomato_assert.h"  // IWYU pragma: keep
 #include "tomato_defines.h" // IWYU pragma: keep
+
+void         *memmove(void *dest, const void *src, usize count);
+long long int llround(double x);
+#define max(a, b) (((a) > (b)) ? (a) : (b))
 
 /**
  * Resizable array for primative types.
@@ -14,9 +14,33 @@ long long int llround(double x);
  * Size and capacity can also be read.
  * Supports appending, safe access, safe popping, inserting, foreach and resizing.
  *
- * Example usage:
- * TOMATO_DYNARRAY_INSTANTIATE(int, i)
+ * Tradeoffs of monomorphization (instantiating template with different types).
+ * (+) Functions are more typesafe because they know their types at compile-time.
+ * (+) Compiler might make specialized optimizations for each type.
+ * (+) This leads to lsp support.
+ * (-) Identical code is duplicated across instantiations.
+ * (-) Functions are part of macros making for painful debugging experience as source location is useless.
+ * (-) Development is a pain since clangd only reevaluates macros on restart.
+ * Other possible implementations include:
+ * - Type-erased generics (using sizeof to account for different element types).
+ * (+) Adding new types that fulfill the contract of the functions is dead easy and can have semantically significant
+ * names.
+ * (+) More functions can easily be added which make use of the interface or act on specific implementations of the
+ * interface.
+ * (+) Less code duplication.
+ * (-) Contract that type must fulfill is not checked at compile time leading to mistakes.
+ * (-) Type not being known within function call makes it harder to debug.
+ * - Void pointer generics (using indirection and casting at callsite for different element types).
+ * (-) Extra layer of indirection adds complexity (where to store allocation) and isn't performant.
  *
+ * Example usage:
+ * #include "tomato_dynarray.h"
+ * TOMATO_DYNARRAY_INSTANTIATE(int, i)
+ * int main()
+ * {
+ *     tomato_dynarray_i da = {0};
+ *     tomato_dynarray_i_
+ * }
  */
 
 #define TOMATO_GROWTH_FACTOR 1.5
@@ -35,77 +59,76 @@ long long int llround(double x);
     {                                                                                                                  \
         bool has_value;                                                                                                \
         TYPE value;                                                                                                    \
-    } tomato_dynarray_option_##SUFFIX;                                                                                 \
+    } tomato_dynarray_##SUFFIX##_option;                                                                               \
     typedef struct                                                                                                     \
     {                                                                                                                  \
         TYPE *buffer;                                                                                                  \
         usize size;                                                                                                    \
         usize capacity;                                                                                                \
     } tomato_dynarray_##SUFFIX;                                                                                        \
-    bool tomato_dynarray_reserve_##SUFFIX(tomato_dynarray_##SUFFIX *da, usize new_capacity)                            \
+    bool tomato_dynarray_##SUFFIX##_reserve(tomato_dynarray_##SUFFIX *da, usize new_capacity)                          \
     {                                                                                                                  \
         if (new_capacity <= da->capacity)                                                                              \
             return false;                                                                                              \
-        TYPE *buffer = TOMATO_CAST(TYPE *) realloc(da->buffer, new_capacity);                                          \
+        TYPE *buffer = TOMATO_CAST(TYPE *) realloc(da->buffer, sizeof(TYPE) * new_capacity);                           \
         if (buffer == nullptr)                                                                                         \
             return true;                                                                                               \
         da->buffer = buffer;                                                                                           \
         da->capacity = new_capacity;                                                                                   \
         return false;                                                                                                  \
     }                                                                                                                  \
-    void tomato_dynarray_grow_##SUFFIX(tomato_dynarray_##SUFFIX *da)                                                   \
+    void tomato_dynarray_##SUFFIX##_grow(tomato_dynarray_##SUFFIX *da)                                                 \
     {                                                                                                                  \
         if (da->size == da->capacity)                                                                                  \
-            TOMATO_ASSERT(                                                                                             \
-                !tomato_dynarray_reserve_##SUFFIX(                                                                     \
-                    da, max(TOMATO_MIN_ARRAY_LEN, (usize)llround(TOMATO_GROWTH_FACTOR * da->capacity))) &&             \
-                "Append failed due to a failed memory reservation");                                                   \
+            bool success = !tomato_dynarray_##SUFFIX##_reserve(                                                        \
+                da, max(TOMATO_MIN_ARRAY_LEN, (usize)llround(TOMATO_GROWTH_FACTOR * da->capacity)));                   \
+        TOMATO_ASSERT(success && "Append failed due to a failed memory reservation");                                  \
     }                                                                                                                  \
-    bool tomato_dynarray_shrink_##SUFFIX(tomato_dynarray_##SUFFIX *da, usize new_capacity)                             \
+    bool tomato_dynarray_##SUFFIX##_shrink(tomato_dynarray_##SUFFIX *da, usize new_capacity)                           \
     {                                                                                                                  \
         if (new_capacity > da->capacity || new_capacity > da->size)                                                    \
             return true;                                                                                               \
-        TYPE *buffer = TOMATO_CAST(TYPE *) realloc(da->buffer, new_capacity);                                          \
+        TYPE *buffer = TOMATO_CAST(TYPE *) realloc(da->buffer, sizeof(TYPE) * new_capacity);                           \
         if (buffer == nullptr)                                                                                         \
             return true;                                                                                               \
         da->buffer = buffer;                                                                                           \
         da->capacity = new_capacity;                                                                                   \
         return false;                                                                                                  \
     }                                                                                                                  \
-    void tomato_dynarray_append_##SUFFIX(tomato_dynarray_##SUFFIX *da, TYPE val)                                       \
+    void tomato_dynarray_##SUFFIX##_append(tomato_dynarray_##SUFFIX *da, TYPE val)                                     \
     {                                                                                                                  \
-        tomato_dynarray_grow_##SUFFIX(da);                                                                             \
+        tomato_dynarray_##SUFFIX##_grow(da);                                                                           \
         da->buffer[da->size++] = val;                                                                                  \
     }                                                                                                                  \
-    tomato_dynarray_option_##SUFFIX tomato_dynarray_get_##SUFFIX(tomato_dynarray_##SUFFIX *da, i32 idx)                \
+    tomato_dynarray_##SUFFIX##_option tomato_dynarray_##SUFFIX##_get(tomato_dynarray_##SUFFIX *da, i32 idx)            \
     {                                                                                                                  \
         if (idx < 0 || (usize)idx > da->size)                                                                          \
-            return TOMATO_C_LITERAL(tomato_dynarray_option_##SUFFIX){.has_value = false, .value = {}};                 \
-        return TOMATO_C_LITERAL(tomato_dynarray_option_##SUFFIX){.has_value = true, .value = da->buffer[idx]};         \
+            return TOMATO_C_LITERAL(tomato_dynarray_##SUFFIX##_option){.has_value = false, .value = {}};               \
+        return TOMATO_C_LITERAL(tomato_dynarray_##SUFFIX##_option){.has_value = true, .value = da->buffer[idx]};       \
     }                                                                                                                  \
-    tomato_dynarray_option_##SUFFIX tomato_dynarray_pop_##SUFFIX(tomato_dynarray_##SUFFIX *da, i32 idx)                \
+    tomato_dynarray_##SUFFIX##_option tomato_dynarray_##SUFFIX##_pop(tomato_dynarray_##SUFFIX *da, i32 idx)            \
     {                                                                                                                  \
         if (idx < 0 || (usize)idx > da->size)                                                                          \
-            return TOMATO_C_LITERAL(tomato_dynarray_option_##SUFFIX){.has_value = false, .value = {}};                 \
-        tomato_dynarray_option_##SUFFIX ret = {.has_value = true, .value = da->buffer[idx]};                           \
+            return TOMATO_C_LITERAL(tomato_dynarray_##SUFFIX##_option){.has_value = false, .value = {}};               \
+        tomato_dynarray_##SUFFIX##_option ret = {.has_value = true, .value = da->buffer[idx]};                         \
         memmove(&da->buffer[idx], &da->buffer[idx + 1], --(da->size) - idx);                                           \
         return ret;                                                                                                    \
     }                                                                                                                  \
-    bool tomato_dynarray_insert_##SUFFIX(tomato_dynarray_##SUFFIX *da, TYPE val, i32 idx)                              \
+    bool tomato_dynarray_##SUFFIX##_insert(tomato_dynarray_##SUFFIX *da, TYPE val, i32 idx)                            \
     {                                                                                                                  \
         if (idx < 0 || (usize)idx > da->size)                                                                          \
             return true;                                                                                               \
-        tomato_dynarray_grow_##SUFFIX(da);                                                                             \
+        tomato_dynarray_##SUFFIX##_grow(da);                                                                           \
         memmove(&da->buffer[idx + 1], &da->buffer[idx], (da->size)++ - idx);                                           \
         da->buffer[idx] = val;                                                                                         \
         return false;                                                                                                  \
     }                                                                                                                  \
-    void tomato_dynarray_foreach_##SUFFIX(tomato_dynarray_##SUFFIX *da, void (*func)(TYPE *))                          \
+    void tomato_dynarray_##SUFFIX##_foreach(tomato_dynarray_##SUFFIX *da, void (*func)(TYPE *))                        \
     {                                                                                                                  \
         for (usize i = 0; i < da->size; i++)                                                                           \
             func(&da->buffer[i]);                                                                                      \
     }                                                                                                                  \
-    void tomato_dynarray_free_##SUFFIX(tomato_dynarray_##SUFFIX *da)                                                   \
+    void tomato_dynarray_##SUFFIX##_free(tomato_dynarray_##SUFFIX *da)                                                 \
     {                                                                                                                  \
         free(da->buffer);                                                                                              \
         da->buffer = nullptr;                                                                                          \

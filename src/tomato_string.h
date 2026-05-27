@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdio.h>
-
 #include "tomato_allocator.h"
 #include "tomato_defines.h"
 
@@ -54,6 +52,7 @@ void s8_fill(s8 str, u8 val);
 /* Prints a debug representation of the string in hex to provided file,
  * returns the number of characters printed.
  */
+#include <stdio.h> // TODO: Delete
 i32 s8_debug_print(FILE *file, s8 str);
 
 // TODO: replace with format specifier macro
