@@ -19,8 +19,13 @@ Import one of the libraries into your project and include the associated header.
 
 ## TODO SHORTTERM:
 - Improve interface of generic dynamic arrays
-    - tests
+    - unordered_pop, pop_last?
+    - Test all functions
+    - Add documentation at the top of the file
     - make allocator aware?
+- Allocator
+    - Add explanations of what contract exactly the allocators need to uphold
+        - Indicate failure by returning nullptr, etc.
 - Strings
     - Improve printing functionality with format specifier macro
     - Stringbuf (owning)
@@ -32,6 +37,19 @@ Import one of the libraries into your project and include the associated header.
 - Shouldn't the memory-aware types store a pointer to the allocator context so they know how to free themselves?
 
 ## TODO LONGTERM:
+- Memory allocators
+    - Fixed size allocators
+        - Block allocator
+        - Slab allocator
+    - Linear allocator (push/pop)
+    - Bump allocator (push/clear)
+    - Arena allocator
+    - Object pools
+        - Generational arena allocator
+- Macro that generates struct of arrays type
+- Macros that allow you to defer operations/simulate exceptions
+- Socket interface across windows/linux
+- Process interface across windows/linux
 - Data structures
     - string rope
     - hashtable
@@ -56,14 +74,14 @@ Import one of the libraries into your project and include the associated header.
 ## HOW TO TEST:
 - On windows:
     - Build `build_test.bat`
-    - Run `test\build\Debug\test_tomato_juice.exe`
+    - Run `test\bin\Debug\test_tomato_juice.exe`
 - In order to use a visual debugger on windows:
     - Open "x64 Native Tools Command Prompt for VS 2022"
     - From that terminal, start the debugger
-    - Run `test\build\Debug\test_tomato_juice.exe --gtest_break_on_failure`
+    - Run `test\bin\Debug\test_tomato_juice.exe --gtest_break_on_failure`
 - On linux
     - Build `./build_test.sh`
-    - Run `./test/build/test_tomato_juice`
+    - Run `./bin/build/test/test_tomato_juice`
 - In order to use a visual debugger on linux:
     - I had some trouble (¬_¬ )
     - For linux on WSL2 Ubuntu 22.04.5 LTS I could not get the vscode debugger working
