@@ -3,47 +3,46 @@
 **My reusable c code library**
 
 ## CONTAINS:
-- Memory allocator concept
+- Memory allocator types
 - Sane strings
 - Resizable vectors
+- Memory arenas
 
 ## HOW TO USE:
-Import one of the libraries into your project and include the associated header.
+Build the project with `build.sh` or `build.bat`. Then copy the relevant libs from `bin/src` and the relevant headers from `include` into your project.
 
 ## REQUIREMENTS:
 - C compiler with C23 support.
 
 ## SUPPORTED PLATFORMS
 - Windows with MSVC
-- Linux with gcc
+- Linux with gcc or clang
 
 ## TODO SHORTTERM:
 - Improve interface of generic dynamic arrays
     - unordered_pop, pop_last?
-    - Test all functions
-    - Add documentation at the top of the file
+    - Test all functions.
+    - Finish documenation.
     - make allocator aware?
 - Allocator
-    - Add explanations of what contract exactly the allocators need to uphold
+    - Add explanations of what contract exactly the allocators need to uphold.
         - Indicate failure by returning nullptr, etc.
 - Strings
-    - Improve printing functionality with format specifier macro
-    - Stringbuf (owning)
-        - tests
-    - string_view of it (non-owning)
-        - write unit tests for string library
-
-## QUESTION
-- Shouldn't the memory-aware types store a pointer to the allocator context so they know how to free themselves?
+    - Improve printing functionality with format specifier macro.
+    - Stringbuf (owning).
+    - string_view of it (non-owning).
+- Arenas
+    - Write tests for all functions.
+    - Write performance benchmarks, compare against libc's malloc/free.
 
 ## TODO LONGTERM:
+- Add prefix_strip macro
 - Memory allocators
     - Fixed size allocators
         - Block allocator
         - Slab allocator
     - Linear allocator (push/pop)
     - Bump allocator (push/clear)
-    - Arena allocator
     - Object pools
         - Generational arena allocator
 - Macro that generates struct of arrays type
@@ -63,7 +62,6 @@ Import one of the libraries into your project and include the associated header.
 - Convenience utilities
 - Replace clang-format with clang-tidy
 - Add support for mingw
-- Add support for clang on linux
 - Add support for clang-cl on windows
 - Give options to build as static libraries or dynamic ones
 - Make address sanitizers optional in tests
