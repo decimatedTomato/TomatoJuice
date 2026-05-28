@@ -2,7 +2,7 @@
 CompileFlags:
   Add: [
     -DNDEBUG,
-    -I../src,
+    -I../include,
     -Wall,
     -Wextra,
     -Werror,

@@ -4,7 +4,7 @@ project(tomato_juice_test LANGUAGES CXX)
 set(CMAKE_C_STANDARD 23)
 set(CMAKE_CXX_STANDARD 23)
 
-set(TOMATO_SRC_DIR ../src)
+set(TOMATO_INCLUDE_DIR ../include)
 
 add_executable(
     test_tomato_juice
@@ -14,7 +14,7 @@ add_executable(
 
 target_include_directories(
     test_tomato_juice
-    PRIVATE ${TOMATO_SRC_DIR}
+    PRIVATE ${TOMATO_INCLUDE_DIR}
 )
 
 include(gtest.cmake)
@@ -40,7 +40,7 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GN
         PRIVATE -fsanitize=address
         PRIVATE -Wall
         PRIVATE -Wextra
-        # PRIVATE -Werror
+        PRIVATE -Werror
         PRIVATE -pedantic
         PRIVATE -Wno-missing-field-initializers
     )
