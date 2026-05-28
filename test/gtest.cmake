@@ -1,5 +1,6 @@
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 include(FetchContent)
+add_compile_options(-Wno-character-conversion)
 FetchContent_Declare(
     googletest
     GIT_REPOSITORY  https://github.com/google/googletest.git
