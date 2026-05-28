@@ -27,6 +27,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message(STATUS "Compiler is MSVC")
     target_compile_options(
         test_tomato_juice
+        PRIVATE /W4
         PRIVATE /fsanitize=address
     )
     target_link_options(

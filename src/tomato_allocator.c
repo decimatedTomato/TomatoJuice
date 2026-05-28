@@ -2,19 +2,19 @@
 
 #include <stdlib.h>
 
-void *wrapped_malloc(usize size, void *)
+void *wrapped_malloc(usize size, [[maybe_unused]] void *allocator_internals)
 {
     return malloc(size);
 }
-void *wrapped_realloc(void *buffer, usize size, void *)
+void *wrapped_realloc(void *buffer, usize size, [[maybe_unused]] void *allocator_internals)
 {
     return realloc(buffer, size);
 }
-void wrapped_free(void *buffer, void *)
+void wrapped_free(void *buffer, [[maybe_unused]] void *allocator_internals)
 {
     free(buffer);
 }
-void *wrapped_aligned_alloc(usize size, usize alignment, void *)
+void *wrapped_aligned_alloc(usize size, usize alignment, [[maybe_unused]] void *allocator_internals)
 {
 #if defined(_WIN32)
     return _aligned_malloc(size, alignment);
@@ -22,7 +22,7 @@ void *wrapped_aligned_alloc(usize size, usize alignment, void *)
     return aligned_alloc(alignment, size);
 #endif
 }
-void wrapped_aligned_free(void *buffer, void *)
+void wrapped_aligned_free(void *buffer, [[maybe_unused]] void *allocator_internals)
 {
 #if defined(_WIN32)
     _aligned_free(buffer);
@@ -31,7 +31,7 @@ void wrapped_aligned_free(void *buffer, void *)
 #endif
 }
 
-void tomato_free_noop(void *, void *)
+void tomato_free_noop([[maybe_unused]] void *buffer, [[maybe_unused]] void *allocator_internals)
 {
 }
 

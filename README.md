@@ -15,8 +15,8 @@ Build the project with `build.sh` or `build.bat`. Then copy the relevant libs fr
 - C compiler with C23 support.
 
 ## SUPPORTED PLATFORMS
-- Windows with MSVC
-- Linux with gcc or clang
+- Linux with gcc or clang.
+- Windows with MSVC if they got around to supporting c23.
 
 ## TODO SHORTTERM:
 - Improve interface of generic dynamic arrays

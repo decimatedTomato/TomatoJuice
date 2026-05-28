@@ -9,4 +9,4 @@ IF NOT EXIST "bin" MD "bin"
 cmake -S . -B bin || EXIT /B 1
 cmake --build bin --config Optimized || EXIT /B 1
 
-IF "%1"=="run" CALL bin\test\test_tomato_juice.exe --gtest_break_on_failure
+IF "%1"=="run" CALL bin\test\test_tomato_juice.exe
