@@ -16,20 +16,20 @@ typedef char *s8;
 /* Initializes memory for string of given capacity, using provided allocator.
  * len should not include the null terminator.
  */
-s8 s8_init(usize len, TomatoAllocCtx *ctx);
+s8 s8_init(usize len, tomato_alloc_ctx *ctx);
 
 /* Initializes and returns string with given capacity, populated with src, using provided allocator.
  * len should not include the null terminator.
  */
-s8 s8_from(usize len, const char *src, TomatoAllocCtx *ctx);
+s8 s8_from(usize len, const char *src, tomato_alloc_ctx *ctx);
 
 /* Initializes and returns new string as exact copy of given string using provided allocator. */
-s8 s8_clone(s8 str, TomatoAllocCtx *ctx);
+s8 s8_clone(s8 str, tomato_alloc_ctx *ctx);
 
 /* Frees and zeroes out memory from string using provided free function.
  * If nullptr is passed, only zeroes memory.
  */
-void s8_free(s8 str, TomatoAllocCtx *ctx);
+void s8_free(s8 str, tomato_alloc_ctx *ctx);
 
 /* Returns the capacity of the string.
  * Note: An extra byte is allocated to hold the null terminator, this is not counted.
@@ -59,7 +59,7 @@ i32 s8_debug_print(FILE *file, s8 str);
 /* Prints a debug representation of the string in hex to provided file,
  * returns the number of characters printed.
  */
-s8 s8_debug_sprint(s8 str, TomatoAllocCtx *ctx);
+s8 s8_debug_sprint(s8 str, tomato_alloc_ctx *ctx);
 
 /*
 // Add view

@@ -11,14 +11,14 @@ typedef struct
     tomato_alloc alloc;
     tomato_free  free;
     void        *allocator_internals;
-} TomatoAllocCtx;
+} tomato_alloc_ctx;
 
 typedef struct
 {
     tomato_realloc realloc;
     tomato_free    free;
     void          *allocator_internals;
-} TomatoReallocCtx;
+} tomato_realloc_ctx;
 
-extern TomatoAllocCtx   libc_malloc_ctx;
-extern TomatoReallocCtx libc_realloc_ctx;
+extern tomato_alloc_ctx   tomato_libc_malloc_ctx;
+extern tomato_realloc_ctx tomato_libc_realloc_ctx;

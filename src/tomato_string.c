@@ -15,7 +15,7 @@ static internal_s8 *get_internal(s8 str)
     return ((internal_s8 *)str) - 1;
 }
 
-s8 s8_init(usize len, TomatoAllocCtx *ctx)
+s8 s8_init(usize len, tomato_alloc_ctx *ctx)
 {
     if (ctx == nullptr)
         return nullptr;
@@ -27,7 +27,7 @@ s8 s8_init(usize len, TomatoAllocCtx *ctx)
     return string->str;
 }
 
-s8 s8_from(usize len, const char *src, TomatoAllocCtx *ctx)
+s8 s8_from(usize len, const char *src, tomato_alloc_ctx *ctx)
 {
     if (src == nullptr || ctx == nullptr)
         return nullptr;
@@ -41,14 +41,14 @@ s8 s8_from(usize len, const char *src, TomatoAllocCtx *ctx)
     return out;
 }
 
-s8 s8_clone(s8 str, TomatoAllocCtx *ctx)
+s8 s8_clone(s8 str, tomato_alloc_ctx *ctx)
 {
     if (str == nullptr || ctx == nullptr)
         return nullptr;
     return s8_from(s8_capacity(str), str, ctx);
 }
 
-void s8_free(s8 str, TomatoAllocCtx *ctx)
+void s8_free(s8 str, tomato_alloc_ctx *ctx)
 {
     if (str == nullptr)
         return;

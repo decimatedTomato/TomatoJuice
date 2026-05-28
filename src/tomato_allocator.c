@@ -15,5 +15,5 @@ void wrapped_free(void *buffer, void *)
     free(buffer);
 }
 
-TomatoAllocCtx   libc_malloc_ctx = {wrapped_malloc, wrapped_free, nullptr};
-TomatoReallocCtx libc_realloc_ctx = {wrapped_realloc, wrapped_free, nullptr};
+tomato_alloc_ctx   tomato_libc_malloc_ctx = {wrapped_malloc, wrapped_free, nullptr};
+tomato_realloc_ctx tomato_libc_realloc_ctx = {wrapped_realloc, wrapped_free, nullptr};
