@@ -18,19 +18,11 @@ target_include_directories(
 )
 
 include(gtest.cmake)
-
+    
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-    message(FATAL_ERROR  "Compiler is Clang")
+    message(STATUS  "Compiler is Clang")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     message(STATUS "Compiler is GNU")
-    target_compile_options(
-        test_tomato_juice
-        PRIVATE -fsanitize=address
-    )
-    target_link_options(
-        test_tomato_juice
-        PRIVATE -fsanitize=address
-    )
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     message(STATUS "Compiler is MSVC")
     target_compile_options(
@@ -40,6 +32,21 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_link_options(
         test_tomato_juice
         PRIVATE /DEBUG:FULL
+    )
+endif()
+if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+    target_compile_options(
+        test_tomato_juice
+        PRIVATE -fsanitize=address
+        PRIVATE -Wall
+        PRIVATE -Wextra
+        # PRIVATE -Werror
+        PRIVATE -pedantic
+        PRIVATE -Wno-missing-field-initializers
+    )
+    target_link_options(
+        test_tomato_juice
+        PRIVATE -fsanitize=address
     )
 endif()
 

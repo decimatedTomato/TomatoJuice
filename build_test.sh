@@ -7,6 +7,11 @@ if [[ $1 == "clean" ]]; then
     shift 1
 fi
 
+# export CC=/usr/bin/gcc
+# export CXX=/usr/bin/g++
+# export CC=/usr/bin/clang
+# export CXX=/usr/bin/clang++
+
 mkdir -p bin
 cmake -S . -B bin -DCMAKE_BUILD_TYPE=RelWithDebInfo
 cmake --build bin

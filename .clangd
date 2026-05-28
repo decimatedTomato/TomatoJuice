@@ -1,12 +1,13 @@
 # Default flags
 CompileFlags:
   Add: [
-    -DDEBUG,
+    -DNDEBUG,
     -I../src,
     -Wall,
     -Wextra,
     -Werror,
     -pedantic,
+    "-fsanitize=address,undefined",
   ]
 ---
 # Flags for .h files
@@ -34,5 +35,6 @@ CompileFlags:
   Add: [
     -xc++,
     -std=c++23,
-    -I../bin/test/googletest/googletest/include
+    -I../bin/test/googletest/googletest/include,
+    -Wnomissing-field-initializers,
   ]

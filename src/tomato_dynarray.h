@@ -57,7 +57,7 @@ long long int llround(double x);
 #define TOMATO_DYNARRAY_INSTANTIATE(TYPE, SUFFIX)                                                                      \
     typedef struct                                                                                                     \
     {                                                                                                                  \
-        bool has_value;                                                                                                \
+        b32  has_value;                                                                                                \
         TYPE value;                                                                                                    \
     } tomato_dynarray_##SUFFIX##_option;                                                                               \
     typedef struct                                                                                                     \
@@ -66,7 +66,7 @@ long long int llround(double x);
         usize size;                                                                                                    \
         usize capacity;                                                                                                \
     } tomato_dynarray_##SUFFIX;                                                                                        \
-    bool tomato_dynarray_##SUFFIX##_reserve(tomato_dynarray_##SUFFIX *da, usize new_capacity)                          \
+    b32 tomato_dynarray_##SUFFIX##_reserve(tomato_dynarray_##SUFFIX *da, usize new_capacity)                           \
     {                                                                                                                  \
         if (new_capacity <= da->capacity)                                                                              \
             return false;                                                                                              \
@@ -80,13 +80,15 @@ long long int llround(double x);
     void tomato_dynarray_##SUFFIX##_grow(tomato_dynarray_##SUFFIX *da)                                                 \
     {                                                                                                                  \
         if (da->size == da->capacity)                                                                                  \
-            bool success = !tomato_dynarray_##SUFFIX##_reserve(                                                        \
+        {                                                                                                              \
+            [[maybe_unused]] b32 success = !tomato_dynarray_##SUFFIX##_reserve(                                        \
                 da, max(TOMATO_MIN_ARRAY_LEN, (usize)llround(TOMATO_GROWTH_FACTOR * da->capacity)));                   \
-        TOMATO_ASSERT(success && "Append failed due to a failed memory reservation");                                  \
+            TOMATO_ASSERT(success && "Append failed due to a failed memory reservation");                              \
+        }                                                                                                              \
     }                                                                                                                  \
-    bool tomato_dynarray_##SUFFIX##_shrink(tomato_dynarray_##SUFFIX *da, usize new_capacity)                           \
+    b32 tomato_dynarray_##SUFFIX##_shrink(tomato_dynarray_##SUFFIX *da, usize new_capacity)                            \
     {                                                                                                                  \
-        if (new_capacity > da->capacity || new_capacity > da->size)                                                    \
+        if (new_capacity > da->capacity || new_capacity < da->size || new_capacity == 0)                               \
             return true;                                                                                               \
         TYPE *buffer = TOMATO_CAST(TYPE *) realloc(da->buffer, sizeof(TYPE) * new_capacity);                           \
         if (buffer == nullptr)                                                                                         \
@@ -102,7 +104,7 @@ long long int llround(double x);
     }                                                                                                                  \
     tomato_dynarray_##SUFFIX##_option tomato_dynarray_##SUFFIX##_get(tomato_dynarray_##SUFFIX *da, i32 idx)            \
     {                                                                                                                  \
-        if (idx < 0 || (usize)idx > da->size)                                                                          \
+        if (idx < 0 || idx > (i32)da->size - 1)                                                                        \
             return TOMATO_C_LITERAL(tomato_dynarray_##SUFFIX##_option){.has_value = false, .value = {}};               \
         return TOMATO_C_LITERAL(tomato_dynarray_##SUFFIX##_option){.has_value = true, .value = da->buffer[idx]};       \
     }                                                                                                                  \
@@ -111,15 +113,15 @@ long long int llround(double x);
         if (idx < 0 || (usize)idx > da->size)                                                                          \
             return TOMATO_C_LITERAL(tomato_dynarray_##SUFFIX##_option){.has_value = false, .value = {}};               \
         tomato_dynarray_##SUFFIX##_option ret = {.has_value = true, .value = da->buffer[idx]};                         \
-        memmove(&da->buffer[idx], &da->buffer[idx + 1], --(da->size) - idx);                                           \
+        memmove(&da->buffer[idx], &da->buffer[idx + 1], sizeof(TYPE) * (--(da->size) - idx));                          \
         return ret;                                                                                                    \
     }                                                                                                                  \
-    bool tomato_dynarray_##SUFFIX##_insert(tomato_dynarray_##SUFFIX *da, TYPE val, i32 idx)                            \
+    b32 tomato_dynarray_##SUFFIX##_insert(tomato_dynarray_##SUFFIX *da, TYPE val, i32 idx)                             \
     {                                                                                                                  \
         if (idx < 0 || (usize)idx > da->size)                                                                          \
             return true;                                                                                               \
         tomato_dynarray_##SUFFIX##_grow(da);                                                                           \
-        memmove(&da->buffer[idx + 1], &da->buffer[idx], (da->size)++ - idx);                                           \
+        memmove(&da->buffer[idx + 1], &da->buffer[idx], sizeof(TYPE) * ((da->size)++ - idx));                          \
         da->buffer[idx] = val;                                                                                         \
         return false;                                                                                                  \
     }                                                                                                                  \
