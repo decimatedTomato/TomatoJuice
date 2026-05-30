@@ -8,9 +8,11 @@
                 "shell": {
                     "executable": "cmd.exe",
                     "args": [
-                        "/d",
-                        "/c",
-                        "\"C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC\\Auxiliary\\Build\\vcvarsx86_amd64.bat\"",
+                        "/k",
+                        "\"C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\Common7\\Tools\\VsDevCmd.bat\"",
+                        "-startdir=none",
+                        "-arch=x64",
+                        "-host_arch=x64",
                         "&"
                     ]
                 }

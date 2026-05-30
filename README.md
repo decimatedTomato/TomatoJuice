@@ -16,7 +16,7 @@ Build the project with `build.sh` or `build.bat`. Then copy the relevant libs fr
 
 ## SUPPORTED PLATFORMS
 - Linux with gcc or clang.
-- Windows with MSVC if they got around to supporting c23.
+- Windows with MSVC.
 
 ## TODO SHORTTERM:
 - Improve interface of generic dynamic arrays

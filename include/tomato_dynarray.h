@@ -1,10 +1,11 @@
 #pragma once
 
+#include <math.h>
+
 #include "tomato_assert.h"  // IWYU pragma: keep
 #include "tomato_defines.h" // IWYU pragma: keep
 
-void         *memmove(void *dest, const void *src, usize count);
-long long int llround(double x);
+void *memmove(void *dest, const void *src, usize count);
 #define max(a, b) (((a) > (b)) ? (a) : (b))
 
 /**
@@ -81,7 +82,7 @@ long long int llround(double x);
     {                                                                                                                  \
         if (da->size == da->capacity)                                                                                  \
         {                                                                                                              \
-            [[maybe_unused]] b32 success = !tomato_dynarray_##SUFFIX##_reserve(                                        \
+            TOMATO_ATTR_UNUSED b32 success = !tomato_dynarray_##SUFFIX##_reserve(                                      \
                 da, max(TOMATO_MIN_ARRAY_LEN, (usize)llround(TOMATO_GROWTH_FACTOR * da->capacity)));                   \
             TOMATO_ASSERT(success && "Append failed due to a failed memory reservation");                              \
         }                                                                                                              \

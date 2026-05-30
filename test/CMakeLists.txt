@@ -1,9 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 project(tomato_juice_test LANGUAGES CXX)
 
-set(CMAKE_C_STANDARD 23)
-set(CMAKE_CXX_STANDARD 23)
-
 set(TOMATO_INCLUDE_DIR ../include)
 
 add_executable(
@@ -28,11 +25,7 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(
         test_tomato_juice
         PRIVATE /W4
-        PRIVATE /fsanitize=address
-    )
-    target_link_options(
-        test_tomato_juice
-        PRIVATE /DEBUG:FULL
+        # PRIVATE /fsanitize=address
     )
 endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")

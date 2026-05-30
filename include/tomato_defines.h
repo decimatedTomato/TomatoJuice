@@ -20,3 +20,11 @@ typedef size_t    usize;
 
 #define countof(a) (sizeof(a) / sizeof((a)[0]))
 #define lengthof(s) (countof(s) - 1)
+
+// portability
+#if __STDC_VERSION__ < 202311L && !defined(__cplusplus)
+#define nullptr ((void *)0)
+#define TOMATO_ATTR_UNUSED
+#else
+#define TOMATO_ATTR_UNUSED [[maybe_unused]]
+#endif

@@ -7,6 +7,6 @@ if "%1"=="clean" (
 IF NOT EXIST "bin" MD "bin"
 
 cmake -S . -B bin || EXIT /B 1
-cmake --build bin --config Optimized || EXIT /B 1
+cmake --build bin --config RelWithDebInfo || EXIT /B 1
 
-IF "%1"=="run" CALL bin\test\test_tomato_juice.exe
+IF "%1"=="run" CALL bin\test\RelWithDebInfo\test_tomato_juice.exe

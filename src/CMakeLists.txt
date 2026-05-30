@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.22)
 project(tomato_juice_src LANGUAGES C)
 
-set(CMAKE_C_STANDARD 23)
-
 set(TOMATO_INCLUDE_DIR ../include)
 
 add_library(tomato_allocator tomato_allocator.c)
