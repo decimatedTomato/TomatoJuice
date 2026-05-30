@@ -25,7 +25,14 @@ elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(
         test_tomato_juice
         PRIVATE /W4
-        # PRIVATE /fsanitize=address
+        PRIVATE /fsanitize=address
+        PRIVATE /D_DISABLE_VECTOR_ANNOTATION
+        PRIVATE /D_DISABLE_STRING_ANNOTATION
+        PRIVATE /D_DISABLE_OPTIONAL_ANNOTATION
+    )
+    target_link_options(
+        test_tomato_juice
+        PRIVATE /INCREMENTAL:NO
     )
 endif()
 if (CMAKE_CXX_COMPILER_ID STREQUAL "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
